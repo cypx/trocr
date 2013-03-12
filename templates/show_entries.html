@@ -1,0 +1,56 @@
+ 
+{% extends "layout.html" %}
+{% block body %}
+  {% if session.logged_in %}
+    <form action="{{ url_for('add_entry') }}" method=post enctype=multipart/form-data class=add-entry>
+      <dl>
+        <dt>File:
+        <dd><input type="file" name="file" />
+        <dt>Title:
+        <dd><input type="text" name="title" rows=5 cols=40 />
+        <dt>Description:
+        <dd><textarea name="descr" rows=5 cols=40></textarea>
+        <dd><input type=submit value=Share>
+      </dl>
+    </form>
+  {% endif %}
+    {% for entry in entries %}
+    <ul id="infos_{{ entry.id }}" class=entries>
+        <li><a id="id_{{ entry.id }}"><h2>{{ entry.title }}</h2></a></li>
+        {% if entry.type == "image" %}
+        <li><img src="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}" alt="{{ entry.filename }}" /></li>
+        {% endif %}
+        {% if entry.type == "video" %}
+        <li><video width="320" height="240" controls>
+          <source src="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}" type="{{ entry.mime }}">
+          Your browser does not support the video tag.
+        </video></li>
+        {% endif %}
+        {% if entry.type == "audio" %}
+        <li><audio controls>
+          <source src="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}" type="{{ entry.mime }}">
+          Your browser does not support the audio element.
+        </audio></li>
+        {% endif %}
+        <li><p>{{ entry.descr|safe }}</p></li>
+        <li class="linkoff"><a href="#infos_{{ entry.id }}" >&#x25B8; Infos</a><li>
+        <li class="linkon">          
+          <a href="#id_{{ entry.id }}">&#x25BE; Infos</a>
+          <ul>
+            <li>URL: <a href="{{ url_for('show_entries',_external=true,i=entry.id) }}">{{ url_for('show_entries',_external=true,i=entry.id) }}</a></li>
+            <li>Download: <a href="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}">{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}</a></li>
+            <li>Date: {{ entry.date }}</li>
+            <li>Type: {{ entry.type }}</li>
+            <li>Type: {{ entry.mime }}</li>
+            <li>Size: {{ entry.size }}</li>
+          </ul></li>
+      </ul>
+    {% else %}
+    <ul class=entries>
+      <li><em>Unbelievable.  No entries here so far</em>
+    </ul>
+    {% endfor %}
+    
+
+
+{% endblock %}
