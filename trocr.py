@@ -108,6 +108,8 @@ def add_entry():
 		return redirect(url_for('show_entries'))
 	uploaded_files = request.files.getlist("file")
 	gallery_uuid=str(uuid4())
+	add_success=0
+	add_fail=0
 	for file in uploaded_files:
 		if file and allowed_file(file.filename):
 			file_title=file.filename.rsplit('.', 1)[0]
@@ -131,9 +133,11 @@ def add_entry():
 				size=fileinfo.st_size,
 				mime=(mimetypes.guess_type(file_path))[0]))
 			g.db.commit()
-			flash('New entry was successfully posted')
+			add_success=add_success+1
 		else:
-			flash('Aborted, corrupt or unallowed file')
+			add_fail=add_fail+1
+	if add_success!=0:flash(str(add_success)+' file(s) was successfully posted')
+	if add_fail!=0:flash(str(add_fail)+' file(s) aborted, corrupt or unallowed file')
 	if 'addinfo' in request.form:
 		return redirect(url_for('edit_entry')+"?i="+gallery_uuid)
 	else:
@@ -145,13 +149,18 @@ def edit_entry():
 		abort(401)
 	if request.method == 'POST':
 		for entry_id in request.form.getlist("entry_id"):
-
 			g.db.execute('UPDATE entries  SET title="{title}", descr="{descr}" WHERE filename like "{pid}.%";'.format(
 				pid=entry_id,
 				title=request.form['title'+"_"+entry_id],
 				descr=request.form['descr'+"_"+entry_id]))
 			g.db.commit()
 			flash('Entry was successfully updated')
+		for del_id in request.form.getlist("del_id"):
+			cur = g.db.execute('SELECT filename FROM entries WHERE filename like "{pid}.%"'.format(pid=del_id))
+			filename = cur.fetchone()[0]
+			os.remove(app.config['UPLOAD_FOLDER']+'/'+'/'.join(filename.split('-')[1:4])+'/'+filename)
+			g.db.execute('DELETE FROM entries  WHERE filename like "{pid}.%";'.format(pid=del_id))
+			g.db.commit()
 		return redirect(url_for('show_entries'))
 	if request.method == 'GET':
 		searchword = request.args.get('i', '')

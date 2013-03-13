@@ -11,7 +11,13 @@
   {% endif %}
     {% for entry in entries %}
     <ul id="infos_{{ entry.id }}" class=entries>
-        <li><a id="id_{{ entry.id }}"><h2>{{ entry.title }}</h2></a></li>
+        <li>
+          <a id="id_{{ entry.id }}"><h2>{{ entry.title }}</h2></a> 
+          {% if session.logged_in %}
+           (<a href="{{ url_for('edit_entry',_external=true,i=entry.id)  }}">edit</a>
+           or <a href="{{ url_for('edit_entry',_external=true,i=entry.gallery_id)  }}"> edit gallery</a>)
+          {% endif %}
+        </li>
         {% if entry.type == "image" %}
         <li><a href="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}">
               <img src="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}" alt="{{ entry.filename }}" />
