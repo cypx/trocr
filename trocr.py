@@ -68,11 +68,11 @@ def show_entries():
 	else:
 		logged=True
 	if (searchword == '') & (logged):
-		cur = g.db.execute('select title, date, descr, filename, size, mime from entries order by id desc')
+		cur = g.db.execute('select title, date, descr, filename, size, mime, gallery_id from entries order by id desc')
 	else:
-		cur = g.db.execute('select title, date, descr, filename, size, mime from entries where filename like "{pid}.%" or gallery_id="{pid}" order by id desc;'.format(
+		cur = g.db.execute('select title, date, descr, filename, size, mime, gallery_id from entries where filename like "{pid}.%" or gallery_id="{pid}" order by id desc;'.format(
 			pid=searchword))
-	entries = [dict(title=row[0], date=time.strftime("%D %H:%M", time.localtime(int(row[1]))), id=row[3].rsplit('.', 1)[0], descr=row[2], filename=row[3], size=sizeof_fmt(row[4]), mime=row[5], type=row[5].split("/")[0]) for row in cur.fetchall()]
+	entries = [dict(title=row[0], date=time.strftime("%D %H:%M", time.localtime(int(row[1]))), id=row[3].rsplit('.', 1)[0], descr=row[2], filename=row[3], size=sizeof_fmt(row[4]), mime=row[5], type=row[5].split("/")[0], gallery_id=row[6]) for row in cur.fetchall()]
 	return render_template('show_entries.html', entries=entries)
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -107,15 +107,12 @@ def add_entry():
 		flash('Aborted, you should provide at least one file')
 		return redirect(url_for('show_entries'))
 	uploaded_files = request.files.getlist("file")
+	gallery_uuid=str(uuid4())
 	for file in uploaded_files:
 		if file and allowed_file(file.filename):
-			if request.form['title'] == "":
-				file_title=file.filename.rsplit('.', 1)[0]
-			else:
-				file_title=request.form['title']
+			file_title=file.filename.rsplit('.', 1)[0]
 			file_upload_name = secure_filename(file.filename)
 			file_uuid=str(uuid4())
-			gallery_uuid=str(uuid4())
 			file_name = file_uuid  + '.' + file.filename.rsplit('.', 1)[1]
 			file_dir = os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(file_name.split('-')[1:4]))
 			file_path = os.path.join(file_dir, file_name)
@@ -129,7 +126,7 @@ def add_entry():
 				aid=app.config['USERNAME'],
 				gid=gallery_uuid,
 				date=time.time(),
-				descr=request.form['descr'],
+				descr="",
 				filename=file_name,
 				size=fileinfo.st_size,
 				mime=(mimetypes.guess_type(file_path))[0]))
@@ -137,7 +134,34 @@ def add_entry():
 			flash('New entry was successfully posted')
 		else:
 			flash('Aborted, corrupt or unallowed file')
-	return redirect(url_for('show_entries'))
+	if 'addinfo' in request.form:
+		return redirect(url_for('edit_entry')+"?i="+gallery_uuid)
+	else:
+		return redirect(url_for('show_entries'))
+
+@app.route('/edit', methods=['GET', 'POST'])
+def edit_entry():
+	if not session.get('logged_in'):
+		abort(401)
+	if request.method == 'POST':
+		for entry_id in request.form.getlist("entry_id"):
+
+			g.db.execute('UPDATE entries  SET title="{title}", descr="{descr}" WHERE filename like "{pid}.%";'.format(
+				pid=entry_id,
+				title=request.form['title'+"_"+entry_id],
+				descr=request.form['descr'+"_"+entry_id]))
+			g.db.commit()
+			flash('Entry was successfully updated')
+		return redirect(url_for('show_entries'))
+	if request.method == 'GET':
+		searchword = request.args.get('i', '')
+		if (searchword == ''):
+			cur = g.db.execute('SELECT title, date, descr, filename, size, mime FROM entries order by id desc')
+		else:
+			cur = g.db.execute('SELECT title, date, descr, filename, size, mime FROM entries WHERE filename like "{pid}.%" or gallery_id="{pid}" order by id desc;'.format(
+				pid=searchword))
+		entries = [dict(title=row[0], date=time.strftime("%D %H:%M", time.localtime(int(row[1]))), id=row[3].rsplit('.', 1)[0], descr=row[2], filename=row[3], size=sizeof_fmt(row[4]), mime=row[5], type=row[5].split("/")[0]) for row in cur.fetchall()]
+		return render_template('edit_entries.html', entries=entries)
 
 if __name__ == '__main__':
 	if not os.path.isfile(app.config['DATABASE']):

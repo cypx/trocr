@@ -11,12 +11,13 @@ h2              { font-size: 1.2em; }
 .entries li     { margin: 0.8em 1.2em; }
 .entries li h2  { margin-left: -1em; }
 
- .entries .linkon{display:none; }
- .entries:target .linkon {display:inline; }
- .entries .linkoff{display:inline; }
- .entries:target .linkoff {display:none; }
+.entries .linkon{display:none; }
+.entries:target .linkon {display:inline; }
+.entries .linkoff{display:inline; }
+.entries:target .linkoff {display:none; }
 
-
+.upload-file-container { background: url(/static/drop-zone.png) no-repeat; width: 500px; height: 200px; }
+.upload-file-container input { filter: alpha(opacity=0); opacity: 0; font-size:160px; width: 500px;}
 
 .add-entry      { font-size: 0.9em; border-bottom: 1px solid #ccc; }
 .add-entry dl   { font-weight: bold; }

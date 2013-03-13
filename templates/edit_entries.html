@@ -2,13 +2,7 @@
 {% extends "layout.html" %}
 {% block body %}
   {% if session.logged_in %}
-    <form method="POST" enctype="multipart/form-data" action="{{ url_for('add_entry') }}" class="add-entry">
-        <dt>File (you can select multiple file):
-        <dd><input type="file" name="file" multiple="" size="20"/>
-        <dt>Check, if you want to personnalize title and/or add comments for each file:<input type="checkbox" name="addinfo" />
-        <dt><input type=submit value=Share>
-    </form>
-  {% endif %}
+    <form method="POST" enctype="multipart/form-data" action="{{ url_for('edit_entry') }}" class="add-entry">
     {% for entry in entries %}
     <ul id="infos_{{ entry.id }}" class=entries>
         <li><a id="id_{{ entry.id }}"><h2>{{ entry.title }}</h2></a></li>
@@ -41,15 +35,21 @@
             <li>Type: {{ entry.type }}</li>
             <li>Type: {{ entry.mime }}</li>
             <li>Size: {{ entry.size }}</li>
-            <li>Gallery: <a href="{{ url_for('show_entries',_external=true,i=entry.gallery_id) }}">{{ url_for('show_entries',_external=true,i=entry.gallery_id) }}</a></li>
           </ul></li>
       </ul>
+        <dt>Title:
+        <dd><input type="text" name="title_{{ entry.id }}" size="20" value="{{ entry.title }}" />
+        <dt>Description:
+        <dd><textarea name="descr_{{ entry.id }}" rows=5 cols=40 value="{{ entry.descr|safe }}"></textarea>
+        <dd><input type=submit value="Update" /> (all modified entries of this page wille be saved)
+          <input type="hidden" value="{{ entry.id }}" name="entry_id" />
     {% else %}
     <ul class=entries>
       <li><em>Unbelievable.  No entries here so far</em>
     </ul>
     {% endfor %}
-    
+    </form>
+    {% endif %}
 
 
 {% endblock %}
