@@ -106,38 +106,38 @@ def add_entry():
 	if not request.files['file']:
 		flash('Aborted, you should provide at least one file')
 		return redirect(url_for('show_entries'))
-	file = request.files['file']
-	if file and allowed_file(file.filename):
-		if request.form['title'] == "":
-			file_title=file.filename.rsplit('.', 1)[0]
+	uploaded_files = request.files.getlist("file")
+	for file in uploaded_files:
+		if file and allowed_file(file.filename):
+			if request.form['title'] == "":
+				file_title=file.filename.rsplit('.', 1)[0]
+			else:
+				file_title=request.form['title']
+			file_upload_name = secure_filename(file.filename)
+			file_uuid=str(uuid4())
+			gallery_uuid=str(uuid4())
+			file_name = file_uuid  + '.' + file.filename.rsplit('.', 1)[1]
+			file_dir = os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(file_name.split('-')[1:4]))
+			file_path = os.path.join(file_dir, file_name)
+			if not os.path.exists(file_dir):
+				os.makedirs(file_dir)
+			file.save(file_path)
+			fileinfo = os.stat(file_path)
+			dictionnary=string.ascii_letters+string.digits # alphanumeric, upper and lowercase
+			g.db.execute('insert into entries (title, author_id, gallery_id, date, descr, filename, size, mime) values ("{title}", "{aid}", "{gid}", "{date}", "{descr}", "{filename}", "{size}", "{mime}");'.format(
+				title=file_title,
+				aid=app.config['USERNAME'],
+				gid=gallery_uuid,
+				date=time.time(),
+				descr=request.form['descr'],
+				filename=file_name,
+				size=fileinfo.st_size,
+				mime=(mimetypes.guess_type(file_path))[0]))
+			g.db.commit()
+			flash('New entry was successfully posted')
 		else:
-			file_title=request.form['title']
-		file_upload_name = secure_filename(file.filename)
-		file_uuid=str(uuid4())
-		gallery_uuid=str(uuid4())
-		file_name = file_uuid  + '.' + file.filename.rsplit('.', 1)[1]
-		file_dir = os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(file_name.split('-')[1:4]))
-		file_path = os.path.join(file_dir, file_name)
-		if not os.path.exists(file_dir):
-			os.makedirs(file_dir)
-		file.save(file_path)
-		fileinfo = os.stat(file_path)
-		dictionnary=string.ascii_letters+string.digits # alphanumeric, upper and lowercase
-		g.db.execute('insert into entries (title, author_id, gallery_id, date, descr, filename, size, mime) values ("{title}", "{aid}", "{gid}", "{date}", "{descr}", "{filename}", "{size}", "{mime}");'.format(
-			title=file_title,
-			aid=app.config['USERNAME'],
-			gid=gallery_uuid,
-			date=time.time(),
-			descr=request.form['descr'],
-			filename=file_name,
-			size=fileinfo.st_size,
-			mime=(mimetypes.guess_type(file_path))[0]))
-		g.db.commit()
-		flash('New entry was successfully posted')
-		return redirect(url_for('show_entries'))
-	else:
-		flash('Aborted, corrupt or unallowed file')
-		return redirect(url_for('show_entries'))
+			flash('Aborted, corrupt or unallowed file')
+	return redirect(url_for('show_entries'))
 
 if __name__ == '__main__':
 	if not os.path.isfile(app.config['DATABASE']):

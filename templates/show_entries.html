@@ -2,16 +2,14 @@
 {% extends "layout.html" %}
 {% block body %}
   {% if session.logged_in %}
-    <form action="{{ url_for('add_entry') }}" method=post enctype=multipart/form-data class=add-entry>
-      <dl>
+    <form method="POST" enctype="multipart/form-data" action="{{ url_for('add_entry') }}" class="add-entry">
         <dt>File:
-        <dd><input type="file" name="file" />
+        <dd><input type="file" name="file" multiple="">
         <dt>Title:
         <dd><input type="text" name="title" rows=5 cols=40 />
         <dt>Description:
         <dd><textarea name="descr" rows=5 cols=40></textarea>
         <dd><input type=submit value=Share>
-      </dl>
     </form>
   {% endif %}
     {% for entry in entries %}
