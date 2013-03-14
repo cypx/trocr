@@ -19,13 +19,18 @@
         <span class="linkon"><a href="#id_page">&#x25BE; Page Infos</a>
             <p>Direct link:<br/> {% for entry in entries %}<a href="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}">{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}</a></br>{% endfor %}</p>
             <p>HTML - Display image:</br>
-             <textarea cols="100" rows="{{ entries_number }}" class="textarea" />{% for entry in entries %}<img src='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}' alt='{{ entry.title }}' />{%print "\r"%}{% endfor %}</textarea></p>
+            <textarea cols="120" rows="{{ entries_number+1 }}" class="textarea" wrap='off' />{% for entry in entries %}<img src='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}' alt='{{ entry.title }}' />{%print "\r"%}{% endfor %}</textarea></p>
+            <p>HTML - Display 600px thumb with link:</br>
+            <textarea cols="120" rows="{{ entries_number+1 }}" class="textarea" wrap='off' />{% for entry in entries %}<a href="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}"><img src='{{ url_for('show_entries',_external=true) }}/tb/600/{{ entry.filename }}'alt='{{ entry.title }}' /></a>{%print "\r"%}{% endfor %}</textarea></p>
+            <p>HTML - Display 150px thumb with link:</br>
+            <textarea cols="120" rows="{{ entries_number+1 }}" class="textarea" wrap='off' />{% for entry in entries %}<a href="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}"><img src='{{ url_for('show_entries',_external=true) }}/tb/150/{{ entry.filename }}' alt='{{ entry.title }}' /></a>{%print "\r"%}{% endfor %}</textarea></p>
             <p>BBCode - Display image:</br>
-              <textarea cols="100" rows="{{ entries_number }}" class="textarea" />{% for entry in entries %}[img]{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}[/img]{%print "\r"%}{% endfor %}</textarea></p>
-              <p>BBCode - Display 600px thumbs:</br>
-              <textarea cols="100" rows="{{ entries_number }}" class="textarea" />{% for entry in entries %}[img]{{ url_for('show_entries',_external=true) }}/tb/600/{{ entry.filename }}[/img]{%print "\r"%}{% endfor %}</textarea></p>
-              <p>BBCode - Display 150px thumbs:</br>
-              <textarea cols="100" rows="{{ entries_number }}" class="textarea" />{% for entry in entries %}[img]{{ url_for('show_entries',_external=true) }}/tb/150/{{ entry.filename }}[/img]{%print "\r"%}{% endfor %}</textarea></p></span>
+              <textarea cols="120" rows="{{ entries_number+1 }}" class="textarea" wrap='off' />{% for entry in entries %}[img]{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}[/img]{%print "\r"%}{% endfor %}</textarea></p>
+            <p>BBCode - Display 600px thumbs with link:</br>
+              <textarea cols="120" rows="{{ entries_number+1 }}" class="textarea" wrap='off' />{% for entry in entries %}[url={{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}][img]{{ url_for('show_entries',_external=true) }}/tb/600/{{ entry.filename }}[/img][/url]{%print "\r"%}{% endfor %}</textarea></p>
+              <p>BBCode - Display 150px thumbs with link:</br>
+                <textarea cols="120" rows="{{ entries_number+1 }}" class="textarea" wrap='off' />{% for entry in entries %}[url={{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}][img]{{ url_for('show_entries',_external=true) }}/tb/150/{{ entry.filename }}[/img][/url]{%print "\r"%}{% endfor %}</textarea></p>
+            </span>
           </ul></li>
     </ul>
     {% endif %}
@@ -69,9 +74,11 @@
             <li>Size: {{ entry.size }}</li>
             <li>Direct link: <a href="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}">{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}</a></li>
             <li>HTML - Display image: <input type="text" size="50%" value="<img src='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}' alt='{{ entry.title }}' />" /></li>
+            <li>HTML - Display 600px thumb with link: <input type="text" size="50%" value="<a href='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}''><img src='{{ url_for('show_entries',_external=true) }}/tb/600/{{ entry.filename }}'alt='{{ entry.title }}' /></a>" /></li>
+            <li>HTML - Display 150px thumb with link: <input type="text" size="50%" value="<a href='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}''><img src='{{ url_for('show_entries',_external=true) }}/tb/150/{{ entry.filename }}'alt='{{ entry.title }}' /></a>" /></li>
             <li>BBCode - Display image: <input type="text" size="50%" value="[img]{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}[/img]" /></li>
-            <li>BBCode - Display 600px thumbs: <input type="text" size="50%" value="[img]{{ url_for('show_entries',_external=true) }}/tb/600/{{ entry.filename }}[/img]" /></li>
-            <li>BBCode - Display 150px thumbs: <input type="text" size="50%" value="[img]{{ url_for('show_entries',_external=true) }}/tb/150/{{ entry.filename }}[/img]" /></li>
+            <li>BBCode - Display 600px thumbs: <input type="text" size="50%" value="[url={{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}][img]{{ url_for('show_entries',_external=true) }}/tb/600/{{ entry.filename }}[/img][/url]" /></li>
+            <li>BBCode - Display 150px thumbs: <input type="text" size="50%" value="[url={{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}][img]{{ url_for('show_entries',_external=true) }}/tb/150/{{ entry.filename }}[/img][/url]" /></li>
           </ul></li>
       </ul>
     {% else %}
