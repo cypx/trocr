@@ -247,9 +247,12 @@ def edit_entry():
 		requested_gallery = request.args.get('g', '')
 		if (requested_id == ''):
 			cur = g.db.execute('SELECT title, date, descr, filename, size, mime FROM entries order by id desc')
-		else:
-			cur = g.db.execute('SELECT title, date, descr, filename, size, mime FROM entries WHERE filename like "{pid}.%" order by id desc;'.format(
+		elif (requested_id != ''):
+			cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id FROM entries WHERE filename like "{pid}.%" ORDER BY id desc;'.format(
 				pid=requested_id))
+		elif (requested_gallery != ''):
+			cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id FROM entries WHERE gallery_id="{gid}" ORDER BY id desc;'.format(
+				gid=requested_gallery))
 		entries = [dict(title=row[0], date=time.strftime("%D %H:%M", time.localtime(int(row[1]))), id=row[3].rsplit('.', 1)[0], descr=row[2], filename=row[3], size=sizeof_fmt(row[4]), mime=row[5], type=row[5].split("/")[0]) for row in cur.fetchall()]
 		return render_template('edit_entries.html', entries=entries)
 
