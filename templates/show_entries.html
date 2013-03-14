@@ -17,7 +17,9 @@
             <p>HTML - Display image:</br>
              <textarea cols="100" rows="{{ entries_number }}" class="textarea" />{% for entry in entries %}<img src='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}' alt='{{ entry.title }}' />{%print "\r"%}{% endfor %}</textarea></p>
             <p>BBCode - Display image:</br>
-              <textarea cols="100" rows="{{ entries_number }}" class="textarea" />{% for entry in entries %}[img]{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}[/img]{%print "\r"%}{% endfor %}</textarea></p></span>
+              <textarea cols="100" rows="{{ entries_number }}" class="textarea" />{% for entry in entries %}[img]{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}[/img]{%print "\r"%}{% endfor %}</textarea></p>
+              <p>BBCode - Display 600px thumbs:</br>
+              <textarea cols="100" rows="{{ entries_number }}" class="textarea" />{% for entry in entries %}[img]{{ url_for('show_entries',_external=true) }}/tb/600/{{ entry.filename }}[/img]{%print "\r"%}{% endfor %}</textarea></p></span>
           </ul></li>
     </ul>
     {% for entry in entries %}

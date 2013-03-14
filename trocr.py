@@ -27,7 +27,7 @@ ENTRY_BY_PAGE = 10
 UPLOAD_FOLDER = os.path.join(os.getcwd(), 'data')
 THUMBNAIL_FOLDER = os.path.join(os.getcwd(), 'thumbnail')
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'zip', 'tar', 'gz', 'png', 'jpg', 'jpeg', 'gif', 'mp4', 'mp3','webm'])
-ALLOWED_THUMBNAIL_SIZE = set([600,150])
+ALLOWED_THUMBNAIL_SIZE = set(['600','150'])
 IMAGE_FORMATS = set(['jpg','jpeg','gif','png','bmp','tiff','svg'])
 VIDEO_FORMATS = set(['mp4','webm','ogg'])
 AUDIO_FORMATS = set(['wav','mp3','ogg','aac','mpeg'])
@@ -57,16 +57,17 @@ def sizeof_fmt(num):
     return "%3.1f%s" % (num, 'TB')
 
 def create_thumb(filename,img_width):
-	src_path=os.path.join(app.config['UPLOAD_FOLDER'], img_width, '/'.join(filename.split('-')[1:4]) ,filename)
-	dest_dir=os.path.join(app.config['THUMBNAIL_FOLDER'], img_width, '/'.join(filename.split('-')[1:4]))
+	src_path=os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(filename.split('-')[1:4]) ,filename)
+	dest_dir=os.path.join(app.config['THUMBNAIL_FOLDER'], str(img_width), '/'.join(filename.split('-')[1:4]))
 	dest_path = os.path.join(dest_dir, filename)
+	size = img_width, 0
 	if not os.path.exists(dest_dir):os.makedirs(dest_dir)
 	try:
 		im = Image.open(src_path)
 		im.thumbnail(size, Image.ANTIALIAS)
-		im.save(dest_path, "JPEG")
+		im.save(dest_path)
 	except IOError:
-		print "cannot create thumbnail for '%s'" % infile
+		print "cannot create thumbnail for '%s'" % filename
 
 @app.before_request
 def before_request():
@@ -137,13 +138,14 @@ def uploaded_file(filename):
 	return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(filename.split('-')[1:4])), filename)
 
 @app.route('/tb/<size>/<filename>')
-def thumbnail_file(filename):
+def show_thumbnail(filename,size):
 	if size not in app.config['ALLOWED_THUMBNAIL_SIZE']:
 		abort(401)
-	file_path=os.path.join(app.config['THUMBNAIL_FOLDER'], size, '/'.join(filename.split('-')[1:4]), filename)
+	file_dir=os.path.join(app.config['THUMBNAIL_FOLDER'], size, '/'.join(filename.split('-')[1:4]))
+	file_path=os.path.join(file_dir, filename)
 	if not os.path.exists(file_path):
-		create_thumb(filename,size)
-	return send_from_directory(filepath)
+		create_thumb(filename,int(size))
+	return send_from_directory(file_dir,filename)
 
 @app.route('/add', methods=['POST'])
 def add_entry():
