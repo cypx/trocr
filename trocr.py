@@ -245,7 +245,7 @@ def edit_entry():
 	if request.method == 'GET':
 		requested_id = request.args.get('i', '')
 		requested_gallery = request.args.get('g', '')
-		if (requested_id == ''):
+		if (requested_id == '') & (requested_gallery == ''):
 			cur = g.db.execute('SELECT title, date, descr, filename, size, mime FROM entries order by id desc')
 		elif (requested_id != ''):
 			cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id FROM entries WHERE filename like "{pid}.%" ORDER BY id desc;'.format(
