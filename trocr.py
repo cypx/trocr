@@ -60,7 +60,7 @@ def create_thumb(filename,img_width):
 	src_path=os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(filename.split('-')[1:4]) ,filename)
 	dest_dir=os.path.join(app.config['THUMBNAIL_FOLDER'], str(img_width), '/'.join(filename.split('-')[1:4]))
 	dest_path = os.path.join(dest_dir, filename)
-	size = img_width, 0
+	size = img_width, img_width*100
 	if not os.path.exists(dest_dir):os.makedirs(dest_dir)
 	try:
 		im = Image.open(src_path)
