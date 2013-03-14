@@ -27,6 +27,7 @@ ENTRY_BY_PAGE = 10
 UPLOAD_FOLDER = os.path.join(os.getcwd(), 'data')
 THUMBNAIL_FOLDER = os.path.join(os.getcwd(), 'thumbnail')
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'zip', 'tar', 'gz', 'png', 'jpg', 'jpeg', 'gif', 'mp4', 'mp3','webm'])
+ALLOWED_THUMBNAIL_SIZE = set([600,150])
 IMAGE_FORMATS = set(['jpg','jpeg','gif','png','bmp','tiff','svg'])
 VIDEO_FORMATS = set(['mp4','webm','ogg'])
 AUDIO_FORMATS = set(['wav','mp3','ogg','aac','mpeg'])
@@ -134,6 +135,15 @@ def logout():
 @app.route('/data/<filename>')
 def uploaded_file(filename):
 	return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(filename.split('-')[1:4])), filename)
+
+@app.route('/tb/<size>/<filename>')
+def thumbnail_file(filename):
+	if size not in app.config['ALLOWED_THUMBNAIL_SIZE']:
+		abort(401)
+	file_path=os.path.join(app.config['THUMBNAIL_FOLDER'], size, '/'.join(filename.split('-')[1:4]), filename)
+	if not os.path.exists(file_path):
+		create_thumb(filename,size)
+	return send_from_directory(filepath)
 
 @app.route('/add', methods=['POST'])
 def add_entry():
