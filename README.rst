@@ -16,13 +16,19 @@ Could be installed on Debian/Ubuntu by this commands
 .. code-block:: bash
 
 	$ aptitude install python-pip
-	$ easy_install install flask
+	$ easy_install flask
 
 For more information look at `<http://flask.pocoo.org/docs/installation/>`__ 
 
 trocr
 *******
-Just extract trocr file to a folder and for quick test use:
+Just download andextract trocr file to a folder 
+
+.. code-block:: bash
+
+	$ curl -L https://github.com/cypx/trocr/archive/master.tar.gz | tar zx --strip-components=1
+
+And for quick test use:
 
 .. code-block:: bash
 
