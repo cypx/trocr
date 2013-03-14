@@ -35,7 +35,7 @@
           <a id="id_{{ entry.id }}"><h2>{{ entry.title }}</h2></a> 
           {% if session.logged_in %}
            (<a href="{{ url_for('edit_entry',_external=true,i=entry.id)  }}">edit</a>
-           or <a href="{{ url_for('edit_entry',_external=true,i=entry.gallery_id)  }}"> edit gallery</a>)
+           or <a href="{{ url_for('edit_entry',_external=true,g=entry.gallery_id)  }}"> edit gallery</a>)
           {% endif %}
         </li>
         {% if entry.type == "image" %}
