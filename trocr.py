@@ -95,6 +95,8 @@ def show_entries():
 	elif (requested_gallery != ''):
 		cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id FROM entries WHERE gallery_id="{gid}" ORDER BY id desc;'.format(
 			gid=requested_gallery))
+	else:
+		cur = g.db.cursor()
 	all_entries = [dict(
 		title=row[0],
 		date=time.strftime("%D %H:%M", time.localtime(int(row[1]))),
