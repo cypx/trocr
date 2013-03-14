@@ -44,7 +44,7 @@ def init_db():
 
 def allowed_file(filename):
 	return '.' in filename and \
-		filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+		(filename.lower()).rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 def sizeof_fmt(num):
     for x in ['bytes','KB','MB','GB']:
@@ -94,7 +94,7 @@ def show_entries():
 	for entry in range(start_from_entry ,end_to_entry):
 		if entry < len(all_entries):
 			selected_entries.append(all_entries[entry])
-	return render_template('show_entries.html', entries=selected_entries, previouspage=previouspage, nextpage=nextpage)
+	return render_template('show_entries.html', entries=selected_entries, previouspage=previouspage, nextpage=nextpage, searchword=searchword, entries_number=len(selected_entries))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

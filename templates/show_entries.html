@@ -9,6 +9,17 @@
         <dt><input type=submit value=Share>
     </form>
   {% endif %}
+    <ul id="infos_page" class=entries>
+        <li><a id="id_page"><h2>Page infos</h2></a></li>
+        <span class="linkoff"><a href="#infos_page" >&#x25B8; Page Infos</a></span>
+        <span class="linkon"><a href="#id_page">&#x25BE; Page Infos</a>
+            <p>Direct link:<br/> {% for entry in entries %}<a href="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}">{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}</a></br>{% endfor %}</p>
+            <p>HTML - Display image:</br>
+             <textarea cols="100" rows="{{ entries_number }}" class="textarea" />{% for entry in entries %}<img src='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}' alt='{{ entry.title }}' />{%print "\r"%}{% endfor %}</textarea></p>
+            <p>BBCode - Display image:</br>
+              <textarea cols="100" rows="{{ entries_number }}" class="textarea" />{% for entry in entries %}[img]{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}[/img]{%print "\r"%}{% endfor %}</textarea></p></span>
+          </ul></li>
+    </ul>
     {% for entry in entries %}
     <ul id="infos_{{ entry.id }}" class=entries>
         <li>
@@ -42,12 +53,14 @@
           <a href="#id_{{ entry.id }}">&#x25BE; Infos</a>
           <ul>
             <li>URL: <a href="{{ url_for('show_entries',_external=true,i=entry.id) }}">{{ url_for('show_entries',_external=true,i=entry.id) }}</a></li>
-            <li>Download: <a href="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}">{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}</a></li>
+            <li>Gallery: <a href="{{ url_for('show_entries',_external=true,i=entry.gallery_id) }}">{{ url_for('show_entries',_external=true,i=entry.gallery_id) }}</a></li>
             <li>Date: {{ entry.date }}</li>
             <li>Type: {{ entry.type }}</li>
             <li>Type: {{ entry.mime }}</li>
             <li>Size: {{ entry.size }}</li>
-            <li>Gallery: <a href="{{ url_for('show_entries',_external=true,i=entry.gallery_id) }}">{{ url_for('show_entries',_external=true,i=entry.gallery_id) }}</a></li>
+            <li>Direct link: <a href="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}">{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}</a></li>
+            <li>HTML - Display image: <input type="text" size="50%" value="<img src='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}' alt='{{ entry.title }}' />" /></li>
+            <li>BBCode - Display image: <input type="text" size="50%" value="[img]{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}[/img]" /></li>
           </ul></li>
       </ul>
     {% else %}
@@ -56,8 +69,8 @@
     </ul>
     {% endfor %}
     <dt>
-      {% if previouspage !=0 %}<a href="{{ url_for('show_entries',_external=true,p=previouspage) }}">Newer</a>{% endif %} 
-      {% if nextpage !=0 %}<a href="{{ url_for('show_entries',_external=true,p=nextpage) }}">Older</a>{% endif %}
+      {% if previouspage !=0 %}<a href="{{ url_for('show_entries',_external=true,p=previouspage,i=searchword) }}">Newer</a>{% endif %} 
+      {% if nextpage !=0 %}<a href="{{ url_for('show_entries',_external=true,p=nextpage,i=searchword) }}">Older</a>{% endif %}
 
 
 {% endblock %}

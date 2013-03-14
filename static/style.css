@@ -16,8 +16,7 @@ h2              { font-size: 1.2em; }
 .entries .linkoff{display:inline; }
 .entries:target .linkoff {display:none; }
 
-.upload-file-container { background: url(/static/drop-zone.png) no-repeat; width: 500px; height: 200px; }
-.upload-file-container input { filter: alpha(opacity=0); opacity: 0; font-size:160px; width: 500px;}
+.textarea { font-size: 0.6em; }
 
 .add-entry      { font-size: 0.9em; border-bottom: 1px solid #ccc; }
 .add-entry dl   { font-weight: bold; }

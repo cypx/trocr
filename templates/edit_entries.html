@@ -41,7 +41,7 @@
         <dd><input type="text" name="title_{{ entry.id }}" size="20" value="{{ entry.title }}" />
         <dt>Description:
         <dd><textarea name="descr_{{ entry.id }}" rows=5 cols=40 value="{{ entry.descr|safe }}"></textarea>
-        <dd><input type=submit value="Update" /> (all modified entries of this page wille be saved)
+        <dd><input type=submit value="Update" /> (all modified entries of this page wille be updated)
         <dt>Mark for deletion <input type="checkbox" name="del_id" value="{{ entry.id }}" />
           <input type="hidden" value="{{ entry.id }}" name="entry_id" />
     {% else %}
