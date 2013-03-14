@@ -11,19 +11,21 @@ import random
 import time
 import os
 import mimetypes
+import Image
 from uuid import uuid4
 from flask import Flask, request, session, g, redirect, url_for, \
 	abort, render_template, flash, send_from_directory
 from werkzeug import secure_filename
 
 # configuration
-DATABASE = os.getcwd()+'/trocr.db'
+DATABASE = os.path.join(os.getcwd(), 'trocr.db')
 DEBUG = True
 SECRET_KEY = 'replace by your own key'
 USERNAME = 'admin'
 PASSWORD = 'default'
 ENTRY_BY_PAGE = 10
-UPLOAD_FOLDER = os.getcwd()+'/data'
+UPLOAD_FOLDER = os.path.join(os.getcwd(), 'data')
+THUMBNAIL_FOLDER = os.path.join(os.getcwd(), 'thumbnail')
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'zip', 'tar', 'gz', 'png', 'jpg', 'jpeg', 'gif', 'mp4', 'mp3','webm'])
 IMAGE_FORMATS = set(['jpg','jpeg','gif','png','bmp','tiff','svg'])
 VIDEO_FORMATS = set(['mp4','webm','ogg'])
@@ -53,6 +55,18 @@ def sizeof_fmt(num):
         num /= 1024.0
     return "%3.1f%s" % (num, 'TB')
 
+def create_thumb(filename,img_width):
+	src_path=os.path.join(app.config['UPLOAD_FOLDER'], img_width, '/'.join(filename.split('-')[1:4]) ,filename)
+	dest_dir=os.path.join(app.config['THUMBNAIL_FOLDER'], img_width, '/'.join(filename.split('-')[1:4]))
+	dest_path = os.path.join(dest_dir, filename)
+	if not os.path.exists(dest_dir):os.makedirs(dest_dir)
+	try:
+		im = Image.open(src_path)
+		im.thumbnail(size, Image.ANTIALIAS)
+		im.save(dest_path, "JPEG")
+	except IOError:
+		print "cannot create thumbnail for '%s'" % infile
+
 @app.before_request
 def before_request():
     g.db = connect_db()
@@ -81,7 +95,8 @@ def show_entries():
 		id=row[3].rsplit('.', 1)[0],
 		descr=row[2], filename=row[3],
 		size=sizeof_fmt(row[4]),
-		mime=row[5], type=row[5].split("/")[0],
+		mime=row[5],
+		type=row[5].split("/")[0],
 		gallery_id=row[6]
 		) for row in cur.fetchall()]
 	selected_entries = []
@@ -177,14 +192,14 @@ def edit_entry():
 				title=request.form['title'+"_"+entry_id],
 				descr=request.form['descr'+"_"+entry_id]))
 			g.db.commit()
-			update_success=0
+			update_success=update_success+1
 		for del_id in request.form.getlist("del_id"):
 			cur = g.db.execute('SELECT filename FROM entries WHERE filename like "{pid}.%"'.format(pid=del_id))
 			filename = cur.fetchone()[0]
-			os.remove(app.config['UPLOAD_FOLDER']+'/'+'/'.join(filename.split('-')[1:4])+'/'+filename)
+			os.remove(os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(filename.split('-')[1:4]), filename))
 			g.db.execute('DELETE FROM entries  WHERE filename like "{pid}.%";'.format(pid=del_id))
 			g.db.commit()
-			del_success=0
+			del_success=del_success+1
 		if update_success!=0:flash(str(update_success)+' file(s) was successfully updated')
 		if del_success!=0:flash(str(del_success)+' file(s) was successfully deleted')
 		return redirect(url_for('show_entries'))
