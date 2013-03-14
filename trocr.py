@@ -169,19 +169,24 @@ def edit_entry():
 	if not session.get('logged_in'):
 		abort(401)
 	if request.method == 'POST':
+		update_success=0
+		del_success=0
 		for entry_id in request.form.getlist("entry_id"):
 			g.db.execute('UPDATE entries  SET title="{title}", descr="{descr}" WHERE filename like "{pid}.%";'.format(
 				pid=entry_id,
 				title=request.form['title'+"_"+entry_id],
 				descr=request.form['descr'+"_"+entry_id]))
 			g.db.commit()
-			flash('Entry was successfully updated')
+			update_success=0
 		for del_id in request.form.getlist("del_id"):
 			cur = g.db.execute('SELECT filename FROM entries WHERE filename like "{pid}.%"'.format(pid=del_id))
 			filename = cur.fetchone()[0]
 			os.remove(app.config['UPLOAD_FOLDER']+'/'+'/'.join(filename.split('-')[1:4])+'/'+filename)
 			g.db.execute('DELETE FROM entries  WHERE filename like "{pid}.%";'.format(pid=del_id))
 			g.db.commit()
+			del_success=0
+		if update_success!=0:flash(str(update_success)+' file(s) was successfully updated')
+		if del_success!=0:flash(str(del_success)+' file(s) was successfully deleted')
 		return redirect(url_for('show_entries'))
 	if request.method == 'GET':
 		searchword = request.args.get('i', '')
