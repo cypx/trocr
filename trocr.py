@@ -79,18 +79,22 @@ def teardown_request(exception):
 
 @app.route('/')
 def show_entries():
-	searchword = request.args.get('i', '')
+	requested_id = request.args.get('i', '')
+	requested_gallery = request.args.get('g', '')
 	currentpage = request.args.get('p', '')
 	if currentpage == "": currentpage="1"
 	if not session.get('logged_in'):
 		logged=False
 	else:
 		logged=True
-	if (searchword == '') & (logged):
-		cur = g.db.execute('select title, date, descr, filename, size, mime, gallery_id from entries order by id desc')
-	else:
-		cur = g.db.execute('select title, date, descr, filename, size, mime, gallery_id from entries where filename like "{pid}.%" or gallery_id="{pid}" order by id desc;'.format(
-			pid=searchword))
+	if (requested_id == '') & (requested_gallery == '') & (logged):
+		cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id FROM entries ORDER BY id desc')
+	elif (requested_id != ''):
+		cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id FROM entries WHERE filename like "{pid}.%" ORDER BY id desc;'.format(
+			pid=requested_id))
+	elif (requested_gallery != ''):
+		cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id FROM entries WHERE gallery_id="{gid}" ORDER BY id desc;'.format(
+			gid=requested_gallery))
 	all_entries = [dict(
 		title=row[0],
 		date=time.strftime("%D %H:%M", time.localtime(int(row[1]))),
@@ -111,7 +115,13 @@ def show_entries():
 	for entry in range(start_from_entry ,end_to_entry):
 		if entry < len(all_entries):
 			selected_entries.append(all_entries[entry])
-	return render_template('show_entries.html', entries=selected_entries, previouspage=previouspage, nextpage=nextpage, searchword=searchword, entries_number=len(selected_entries))
+	return render_template('show_entries.html',
+		entries=selected_entries,
+		previouspage=previouspage,
+		nextpage=nextpage,
+		requested_gallery=requested_gallery,
+		requested_id=requested_id,
+		entries_number=len(selected_entries))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -155,7 +165,10 @@ def add_entry():
 		flash('Aborted, you should provide at least one file')
 		return redirect(url_for('show_entries'))
 	uploaded_files = request.files.getlist("file")
-	gallery_uuid=str(uuid4())
+	if request.form['requested_gallery']=="":
+		gallery_uuid=str(uuid4())
+	else:
+		gallery_uuid=request.form['requested_gallery']
 	add_success=0
 	add_fail=0
 	for file in uploaded_files:
@@ -208,7 +221,21 @@ def edit_entry():
 		for del_id in request.form.getlist("del_id"):
 			cur = g.db.execute('SELECT filename FROM entries WHERE filename like "{pid}.%"'.format(pid=del_id))
 			filename = cur.fetchone()[0]
-			os.remove(os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(filename.split('-')[1:4]), filename))
+			if os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(filename.split('-')[1:4]), filename)):
+				os.remove(os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(filename.split('-')[1:4]), filename))
+			for dir_level in range(4,1,-1):
+				if os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(filename.split('-')[1:dir_level]))):
+					rm_dir=os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(filename.split('-')[1:dir_level]))
+					if os.listdir(rm_dir) == []:
+						os.rmdir(rm_dir)
+			for size in app.config['ALLOWED_THUMBNAIL_SIZE']:
+				if os.path.exists(os.path.join(app.config['THUMBNAIL_FOLDER'], size, '/'.join(filename.split('-')[1:4]), filename)):
+					os.remove(os.path.join(app.config['THUMBNAIL_FOLDER'], size, '/'.join(filename.split('-')[1:4]), filename))
+				for dir_level in range(4,1,-1):
+					if os.path.exists(os.path.join(app.config['THUMBNAIL_FOLDER'], size, '/'.join(filename.split('-')[1:dir_level]))):
+						rm_dir=os.path.join(app.config['THUMBNAIL_FOLDER'], size, '/'.join(filename.split('-')[1:dir_level]))
+						if os.listdir(rm_dir) == []:
+							os.rmdir(rm_dir)
 			g.db.execute('DELETE FROM entries  WHERE filename like "{pid}.%";'.format(pid=del_id))
 			g.db.commit()
 			del_success=del_success+1
@@ -216,12 +243,13 @@ def edit_entry():
 		if del_success!=0:flash(str(del_success)+' file(s) was successfully deleted')
 		return redirect(url_for('show_entries'))
 	if request.method == 'GET':
-		searchword = request.args.get('i', '')
-		if (searchword == ''):
+		requested_id = request.args.get('i', '')
+		requested_gallery = request.args.get('g', '')
+		if (requested_id == ''):
 			cur = g.db.execute('SELECT title, date, descr, filename, size, mime FROM entries order by id desc')
 		else:
-			cur = g.db.execute('SELECT title, date, descr, filename, size, mime FROM entries WHERE filename like "{pid}.%" or gallery_id="{pid}" order by id desc;'.format(
-				pid=searchword))
+			cur = g.db.execute('SELECT title, date, descr, filename, size, mime FROM entries WHERE filename like "{pid}.%" order by id desc;'.format(
+				pid=requested_id))
 		entries = [dict(title=row[0], date=time.strftime("%D %H:%M", time.localtime(int(row[1]))), id=row[3].rsplit('.', 1)[0], descr=row[2], filename=row[3], size=sizeof_fmt(row[4]), mime=row[5], type=row[5].split("/")[0]) for row in cur.fetchall()]
 		return render_template('edit_entries.html', entries=entries)
 
