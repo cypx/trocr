@@ -22,6 +22,7 @@ DEBUG = True
 SECRET_KEY = 'replace by your own key'
 USERNAME = 'admin'
 PASSWORD = 'default'
+ENTRY_BY_PAGE = 10
 UPLOAD_FOLDER = os.getcwd()+'/data'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'zip', 'tar', 'gz', 'png', 'jpg', 'jpeg', 'gif', 'mp4', 'mp3','webm'])
 IMAGE_FORMATS = set(['jpg','jpeg','gif','png','bmp','tiff','svg'])
@@ -63,6 +64,8 @@ def teardown_request(exception):
 @app.route('/')
 def show_entries():
 	searchword = request.args.get('i', '')
+	currentpage = request.args.get('p', '')
+	if currentpage == "": currentpage="1"
 	if not session.get('logged_in'):
 		logged=False
 	else:
@@ -72,8 +75,26 @@ def show_entries():
 	else:
 		cur = g.db.execute('select title, date, descr, filename, size, mime, gallery_id from entries where filename like "{pid}.%" or gallery_id="{pid}" order by id desc;'.format(
 			pid=searchword))
-	entries = [dict(title=row[0], date=time.strftime("%D %H:%M", time.localtime(int(row[1]))), id=row[3].rsplit('.', 1)[0], descr=row[2], filename=row[3], size=sizeof_fmt(row[4]), mime=row[5], type=row[5].split("/")[0], gallery_id=row[6]) for row in cur.fetchall()]
-	return render_template('show_entries.html', entries=entries)
+	all_entries = [dict(
+		title=row[0],
+		date=time.strftime("%D %H:%M", time.localtime(int(row[1]))),
+		id=row[3].rsplit('.', 1)[0],
+		descr=row[2], filename=row[3],
+		size=sizeof_fmt(row[4]),
+		mime=row[5], type=row[5].split("/")[0],
+		gallery_id=row[6]
+		) for row in cur.fetchall()]
+	selected_entries = []
+	start_from_entry = app.config['ENTRY_BY_PAGE']*(int(currentpage)-1)
+	end_to_entry = (app.config['ENTRY_BY_PAGE']*int(currentpage))-1
+	if int(currentpage)>1: previouspage=int(currentpage)-1
+	else: previouspage=0
+	if end_to_entry < len(all_entries): nextpage=int(currentpage)+1 
+	else: nextpage=0
+	for entry in range(start_from_entry ,end_to_entry):
+		if entry < len(all_entries):
+			selected_entries.append(all_entries[entry])
+	return render_template('show_entries.html', entries=selected_entries, previouspage=previouspage, nextpage=nextpage)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

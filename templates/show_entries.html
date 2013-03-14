@@ -55,7 +55,9 @@
       <li><em>Unbelievable.  No entries here so far</em>
     </ul>
     {% endfor %}
-    
+    <dt>
+      {% if previouspage !=0 %}<a href="{{ url_for('show_entries',_external=true,p=previouspage) }}">Newer</a>{% endif %} 
+      {% if nextpage !=0 %}<a href="{{ url_for('show_entries',_external=true,p=nextpage) }}">Older</a>{% endif %}
 
 
 {% endblock %}
