@@ -33,7 +33,7 @@ Copy configuration file (webconfig.py) from sample (webconfig.py.sample) an modi
 .. code-block:: bash
 
 	$ cp webconfig.py.sample webconfig.py
-	$ vi 
+	$ vi webconfig.py
 
 For quick test you could use:
 

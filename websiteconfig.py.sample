@@ -3,7 +3,7 @@ import os
 _basedir = os.path.abspath(os.path.dirname(__file__))
 
 DATABASE = os.path.join(os.getcwd(), 'trocr.db')
-DEBUG = True
+DEBUG = False
 SECRET_KEY = 'replace by your own key'
 USERNAME = 'admin'
 PASSWORD = 'default'
