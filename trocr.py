@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 # imports needed for DB initialisation
 from __future__ import with_statement
 from contextlib import closing
@@ -18,23 +15,26 @@ from flask import Flask, request, session, g, redirect, url_for, \
 from werkzeug import secure_filename
 
 # configuration
-DATABASE = os.path.join(os.getcwd(), 'trocr.db')
-DEBUG = True
-SECRET_KEY = 'replace by your own key'
-USERNAME = 'admin'
-PASSWORD = 'default'
-ENTRY_BY_PAGE = 10
-UPLOAD_FOLDER = os.path.join(os.getcwd(), 'data')
-THUMBNAIL_FOLDER = os.path.join(os.getcwd(), 'thumbnail')
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'zip', 'tar', 'gz', 'png', 'jpg', 'jpeg', 'gif', 'mp4', 'mp3','webm'])
-ALLOWED_THUMBNAIL_SIZE = set(['600','150'])
-IMAGE_FORMATS = set(['jpg','jpeg','gif','png','bmp','tiff','svg'])
-VIDEO_FORMATS = set(['mp4','webm','ogg'])
-AUDIO_FORMATS = set(['wav','mp3','ogg','aac','mpeg'])
+#DATABASE = os.path.join(os.getcwd(), 'trocr.db')
+#DEBUG = True
+#SECRET_KEY = 'replace by your own key'
+#USERNAME = 'admin'
+#PASSWORD = 'default'
+#ENTRY_BY_PAGE = 10
+#BASE_FOLDER = os.path.join(os.getcwd()
+#UPLOAD_FOLDER = os.path.join(BASE_FOLDER, 'data')
+#THUMBNAIL_FOLDER = os.path.join(BASE_FOLDER, 'thumbnail')
+#ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'zip', 'tar', 'gz', 'png', 'jpg', 'jpeg', 'gif', 'mp4', 'mp3','webm'])
+#ALLOWED_THUMBNAIL_SIZE = set(600,150)
+#IMAGE_FORMATS = set(['jpg','jpeg','gif','png','bmp','tiff','svg'])
+#VIDEO_FORMATS = set(['mp4','webm','ogg'])
+#AUDIO_FORMATS = set(['wav','mp3','ogg','aac','mpeg'])
 
 # create application
 app = Flask(__name__)
-app.config.from_object(__name__)
+#app.config.from_object(__name__)
+app.config.from_object('websiteconfig')
+
 
 def connect_db():
 	return sqlite3.connect(app.config['DATABASE'])
@@ -47,7 +47,7 @@ def init_db():
 
 def allowed_file(filename):
 	return '.' in filename and \
-		(filename.lower()).rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+		(filename.lower()).rsplit('.', 1)[1] in (app.config['ALLOWED_EXTENSIONS'])
 
 def sizeof_fmt(num):
     for x in ['bytes','KB','MB','GB']:
@@ -149,14 +149,14 @@ def logout():
 def uploaded_file(filename):
 	return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(filename.split('-')[1:4])), filename)
 
-@app.route('/tb/<size>/<filename>')
+@app.route('/tb/<int:size>/<filename>')
 def show_thumbnail(filename,size):
 	if size not in app.config['ALLOWED_THUMBNAIL_SIZE']:
 		abort(401)
-	file_dir=os.path.join(app.config['THUMBNAIL_FOLDER'], size, '/'.join(filename.split('-')[1:4]))
+	file_dir=os.path.join(app.config['THUMBNAIL_FOLDER'], str(size), '/'.join(filename.split('-')[1:4]))
 	file_path=os.path.join(file_dir, filename)
 	if not os.path.exists(file_path):
-		create_thumb(filename,int(size))
+		create_thumb(filename,size)
 	return send_from_directory(file_dir,filename)
 
 @app.route('/add', methods=['POST'])

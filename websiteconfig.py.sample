@@ -1,0 +1,19 @@
+import os
+
+_basedir = os.path.abspath(os.path.dirname(__file__))
+
+DATABASE = os.path.join(os.getcwd(), 'trocr.db')
+DEBUG = True
+SECRET_KEY = 'replace by your own key'
+USERNAME = 'admin'
+PASSWORD = 'default'
+ENTRY_BY_PAGE = 10
+UPLOAD_FOLDER = os.path.join(_basedir, 'data')
+THUMBNAIL_FOLDER = os.path.join(_basedir, 'thumbnail')
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'zip', 'tar', 'gz', 'png', 'jpg', 'jpeg', 'gif', 'mp4', 'mp3','webm'])
+ALLOWED_THUMBNAIL_SIZE = set([600,150])
+IMAGE_FORMATS = set(['jpg','jpeg','gif','png','bmp','tiff','svg'])
+VIDEO_FORMATS = set(['mp4','webm','ogg'])
+AUDIO_FORMATS = set(['wav','mp3','ogg','aac','mpeg'])
+
+del os

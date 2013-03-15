@@ -22,7 +22,7 @@
               <textarea cols="120" rows="{{ entries_number+1 }}" class="textarea" wrap='off' />{% for entry in entries -%}
                 {#- -#}<a href="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}">{#- -#}
                 {%- if entry.type == "image" -%}
-                  {#- -#}<img src='{{ url_for('show_entries',_external=true) }}/data/{{ entry.filename }}' alt='{{ entry.title }}' />{#- -#}
+                  {#- -#}<img src='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}' alt='{{ entry.title }}' />{#- -#}
                 {%- else  -%}
                   {#- -#}Download file {{ entry.title }}{#- -#}
                 {%- endif -%}
@@ -32,7 +32,7 @@
               <textarea cols="120" rows="{{ entries_number+1 }}" class="textarea" wrap='off' />{% for entry in entries -%}
                 {#- -#}<a href="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}">{#- -#}
                 {%- if entry.type == "image" -%}
-                  {#- -#}<img src='{{ url_for('show_entries',_external=true) }}/tb/600/{{ entry.filename }}' alt='{{ entry.title }}' />{#- -#}
+                  {#- -#}<img src='{{ url_for('show_entries',_external=true) }}tb/600/{{ entry.filename }}' alt='{{ entry.title }}' />{#- -#}
                 {%- else  -%}
                   {#- -#}Download file {{ entry.title }}{#- -#}
                 {%- endif -%}
@@ -42,7 +42,7 @@
               <textarea cols="120" rows="{{ entries_number+1 }}" class="textarea" wrap='off' />{% for entry in entries -%}
                 {#- -#}<a href="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}">{#- -#}
                 {%- if entry.type == "image" -%}
-                  {#- -#}<img src='{{ url_for('show_entries',_external=true) }}/tb/150/{{ entry.filename }}' alt='{{ entry.title }}' />{#- -#}
+                  {#- -#}<img src='{{ url_for('show_entries',_external=true) }}tb/150/{{ entry.filename }}' alt='{{ entry.title }}' />{#- -#}
                 {%- else  -%}
                   {#- -#}Download file {{ entry.title }}{#- -#}
                 {%- endif -%}
@@ -52,7 +52,7 @@
               <textarea cols="120" rows="{{ entries_number+1 }}" class="textarea" wrap='off' />{% for entry in entries -%}
                 {#- -#}[url={{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}]{#- -#}
                 {%- if entry.type == "image" -%}
-                  {#- -#}[img]{{ url_for('show_entries',_external=true) }}/data/{{ entry.filename }}[/img]{#- -#}
+                  {#- -#}[img]{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}[/img]{#- -#}
                 {%- else  -%}
                   {#- -#}Download file {{ entry.title }}{#- -#}
                 {%- endif -%}
@@ -62,7 +62,7 @@
               <textarea cols="120" rows="{{ entries_number+1 }}" class="textarea" wrap='off' />{% for entry in entries -%}
                 {#- -#}[url={{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}]{#- -#}
                 {%- if entry.type == "image" -%}
-                  {#- -#}[img]{{ url_for('show_entries',_external=true) }}/tb/600/{{ entry.filename }}[/img]{#- -#}
+                  {#- -#}[img]{{ url_for('show_entries',_external=true) }}tb/600/{{ entry.filename }}[/img]{#- -#}
                 {%- else  -%}
                   {#- -#}Download file {{ entry.title }}{#- -#}
                 {%- endif -%}
@@ -72,7 +72,7 @@
               <textarea cols="120" rows="{{ entries_number+1 }}" class="textarea" wrap='off' />{% for entry in entries -%}
                 {#- -#}[url={{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}]{#- -#}
                 {%- if entry.type == "image" -%}
-                  {#- -#}[img]{{ url_for('show_entries',_external=true) }}/tb/150/{{ entry.filename }}[/img]{#- -#}
+                  {#- -#}[img]{{ url_for('show_entries',_external=true) }}tb/150/{{ entry.filename }}[/img]{#- -#}
                 {%- else  -%}
                   {#- -#}Download file {{ entry.title }}{#- -#}
                 {%- endif -%}
@@ -93,7 +93,7 @@
         </li>
         {% if entry.type == "image" %}
         <li><a href="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}">
-              <img src="{{ url_for('show_entries',_external=true) }}/tb/600/{{ entry.filename }}" alt="{{ entry.filename }}" />
+              <img src="{{ url_for('show_entries',_external=true) }}tb/600/{{ entry.filename }}" alt="{{ entry.filename }}" />
             </a>
         </li>
         {% elif entry.type == "video" %}
@@ -123,11 +123,11 @@
             <li>Direct link: <a href="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}">{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}</a></li>
             {% if entry.type == "image" %}
             <li>HTML - Display image: <input type="text" size="50%" value="<img src='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}' alt='{{ entry.title }}' />" /></li>
-            <li>HTML - Display 600px thumb with link: <input type="text" size="50%" value="<a href='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}''><img src='{{ url_for('show_entries',_external=true) }}/tb/600/{{ entry.filename }}'alt='{{ entry.title }}' /></a>" /></li>
-            <li>HTML - Display 150px thumb with link: <input type="text" size="50%" value="<a href='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}''><img src='{{ url_for('show_entries',_external=true) }}/tb/150/{{ entry.filename }}'alt='{{ entry.title }}' /></a>" /></li>
+            <li>HTML - Display 600px thumb with link: <input type="text" size="50%" value="<a href='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}''><img src='{{ url_for('show_entries',_external=true) }}tb/600/{{ entry.filename }}'alt='{{ entry.title }}' /></a>" /></li>
+            <li>HTML - Display 150px thumb with link: <input type="text" size="50%" value="<a href='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}''><img src='{{ url_for('show_entries',_external=true) }}tb/150/{{ entry.filename }}'alt='{{ entry.title }}' /></a>" /></li>
             <li>BBCode - Display image: <input type="text" size="50%" value="[img]{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}[/img]" /></li>
-            <li>BBCode - Display 600px thumbs: <input type="text" size="50%" value="[url={{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}][img]{{ url_for('show_entries',_external=true) }}/tb/600/{{ entry.filename }}[/img][/url]" /></li>
-            <li>BBCode - Display 150px thumbs: <input type="text" size="50%" value="[url={{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}][img]{{ url_for('show_entries',_external=true) }}/tb/150/{{ entry.filename }}[/img][/url]" /></li>
+            <li>BBCode - Display 600px thumbs: <input type="text" size="50%" value="[url={{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}][img]{{ url_for('show_entries',_external=true) }}tb/600/{{ entry.filename }}[/img][/url]" /></li>
+            <li>BBCode - Display 150px thumbs: <input type="text" size="50%" value="[url={{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}][img]{{ url_for('show_entries',_external=true) }}tb/150/{{ entry.filename }}[/img][/url]" /></li>
             {% endif %}
           </ul></li>
       </ul>
