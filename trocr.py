@@ -186,7 +186,7 @@ def add_entry():
 			file.save(file_path)
 			fileinfo = os.stat(file_path)
 			dictionnary=string.ascii_letters+string.digits # alphanumeric, upper and lowercase
-			g.db.execute('insert into entries (title, author_id, gallery_id, date, descr, filename, size, mime) values ("{title}", "{aid}", "{gid}", "{date}", "{descr}", "{filename}", "{size}", "{mime}");'.format(
+			g.db.execute('INSERT INTO entries (title, author_id, gallery_id, date, descr, filename, size, mime) VALUES ("{title}", "{aid}", "{gid}", "{date}", "{descr}", "{filename}", "{size}", "{mime}");'.format(
 				title=file_title,
 				aid=app.config['USERNAME'],
 				gid=gallery_uuid,
@@ -255,7 +255,15 @@ def edit_entry():
 		elif (requested_gallery != ''):
 			cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id FROM entries WHERE gallery_id="{gid}" ORDER BY id asc;'.format(
 				gid=requested_gallery))
-		entries = [dict(title=row[0], date=time.strftime("%D %H:%M", time.localtime(int(row[1]))), id=row[3].rsplit('.', 1)[0], descr=row[2], filename=row[3], size=sizeof_fmt(row[4]), mime=row[5], type=row[5].split("/")[0]) for row in cur.fetchall()]
+		entries = [dict(
+			title=row[0],
+			date=time.strftime("%D %H:%M",
+			time.localtime(int(row[1]))),
+			id=row[3].rsplit('.', 1)[0],
+			descr=row[2], filename=row[3],
+			size=sizeof_fmt(row[4]),
+			mime=row[5],
+			type=row[5].split("/")[0]) for row in cur.fetchall()]
 		return render_template('edit_entries.html', entries=entries)
 
 if __name__ == '__main__':
