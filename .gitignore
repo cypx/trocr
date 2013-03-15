@@ -11,4 +11,4 @@ lib64
 data/
 thumbnail/
 trocr.db
-.websiteconfig
+websiteconfig.py
