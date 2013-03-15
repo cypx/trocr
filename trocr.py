@@ -252,6 +252,8 @@ def edit_entry():
 
 if __name__ == '__main__':
 	if not os.path.isfile(app.config['DATABASE']):
+		db_file = open(app.config['DATABASE'], 'w')
+		db_file.write(data)
 		init_db()
 	if not os.path.exists(app.config['UPLOAD_FOLDER']):
 		os.makedirs(app.config['UPLOAD_FOLDER'])

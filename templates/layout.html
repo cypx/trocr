@@ -1,8 +1,8 @@
 <!doctype html>
-<title>Trocr</title>
+<title>trocr</title>
 <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
 <div class=page>
-  <h1><a href={{ url_for('show_entries') }}>Trocr</a></h1>
+  <h1><a href={{ url_for('show_entries') }}>trocr</a></h1>
   <div class=metanav>
   {% if not session.logged_in %}
     <a href="{{ url_for('login') }}">log in</a>
@@ -14,4 +14,7 @@
     <div class=flash>{{ message }}</div>
   {% endfor %}
   {% block body %}{% endblock %}
+  <div class=footer>
+  <h3><a href="https://github.com/cypx/trocr">Get trocr on Github</a></h3>
+  </div>
 </div>
