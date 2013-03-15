@@ -14,22 +14,6 @@ from flask import Flask, request, session, g, redirect, url_for, \
 	abort, render_template, flash, send_from_directory
 from werkzeug import secure_filename
 
-# configuration
-#DATABASE = os.path.join(os.getcwd(), 'trocr.db')
-#DEBUG = True
-#SECRET_KEY = 'replace by your own key'
-#USERNAME = 'admin'
-#PASSWORD = 'default'
-#ENTRY_BY_PAGE = 10
-#BASE_FOLDER = os.path.join(os.getcwd()
-#UPLOAD_FOLDER = os.path.join(BASE_FOLDER, 'data')
-#THUMBNAIL_FOLDER = os.path.join(BASE_FOLDER, 'thumbnail')
-#ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'zip', 'tar', 'gz', 'png', 'jpg', 'jpeg', 'gif', 'mp4', 'mp3','webm'])
-#ALLOWED_THUMBNAIL_SIZE = set(600,150)
-#IMAGE_FORMATS = set(['jpg','jpeg','gif','png','bmp','tiff','svg'])
-#VIDEO_FORMATS = set(['mp4','webm','ogg'])
-#AUDIO_FORMATS = set(['wav','mp3','ogg','aac','mpeg'])
-
 # create application
 app = Flask(__name__)
 #app.config.from_object(__name__)
