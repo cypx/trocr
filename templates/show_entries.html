@@ -3,9 +3,9 @@
 {% block body %}
   {% if (session.logged_in) and (requested_id=="")  %}
     <form method="POST" enctype="multipart/form-data" action="{{ url_for('add_entry') }}" class="add-entry">
-        <dt>File (you can select multiple file):
+        <dt>File (you can select multiple file, max size {{ max_upload_size }}):
         <dd><input type="file" name="file" multiple="" size="20"/>
-        <dt>Check, if you want to personnalize title and/or add comments for each file:<input type="checkbox" name="addinfo" />
+        <dt><input type="checkbox" name="addinfo" /> Check, if you want to personnalize title and/or add comments for each file
         <dt><input type=submit value=Share><input type="hidden" value="{{ requested_gallery }}" name="requested_gallery" />
         {% if (requested_gallery!="")  %}
         <dt>Uploaded file will be added to the current gallery, upload from <a href={{ url_for('show_entries') }}>homepage</a></h1> if you want to create a new gallery

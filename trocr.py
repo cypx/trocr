@@ -35,7 +35,7 @@ def page_not_authorized(e):
 
 @app.errorhandler(413)
 def upload_too_big(e):
-	error="maximum upload size exceeded.<br/>You can't upload more than "+str(app.config['MAX_CONTENT_LENGTH'])+"MB in once"
+	error="maximum upload size exceeded. You can't upload more than "+str((app.config['MAX_CONTENT_LENGTH'])/ 1024 / 1024)+"MB in once"
 	return render_template('error.html', error=error), 413
 
 def connect_db():
@@ -127,7 +127,8 @@ def show_entries():
 		nextpage=nextpage,
 		requested_gallery=requested_gallery,
 		requested_id=requested_id,
-		entries_number=len(selected_entries))
+		entries_number=len(selected_entries),
+		max_upload_size=str((app.config['MAX_CONTENT_LENGTH'])/ 1024 / 1024))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
