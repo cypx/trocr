@@ -30,7 +30,7 @@ Just download andextract trocr file to a folder
 
 	$ curl -L https://github.com/cypx/trocr/archive/master.tar.gz | tar zx --strip-components=1
 
-Copy configuration file (webconfig.py) from sample (webconfig.py.sample) an modify it as you want
+Create configuration file (webconfig.py) from sample (webconfig.py.sample) an modify it as you want
 
 .. code-block:: bash
 
@@ -43,7 +43,7 @@ For quick test you could use:
 
 	$ python trocr.py
 
-Refer to your web server documentation about WSGI for production use
+Refer to `<http://flask.pocoo.org/docs/deploying/>`__  and your web server documentation about WSGI for production use
 
 
 
