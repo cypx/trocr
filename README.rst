@@ -6,6 +6,21 @@ TROCR  - Share your file
 
 |flattr|_
 
+Features
+*************
+
+* multiple files upload
+* gallery page creation
+* HTML & BBCode link generation with thumbnail for image
+* HTML & BBCode link generation for all file
+* HTML video player and audio player for supported file
+
+Example & demo
+****************
+
+* gallery sample: `<http://trocr.bidouille.info/?g=d4641421-13fa-424b-87ae-4fb7c2a44ca7>`__
+* demo (automatically resets every 10mn): `<http://trocr-demo.bidouille.info/>`__ (login/pass = demo/demo) 
+
 Installation
 ##############
 
