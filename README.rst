@@ -2,12 +2,12 @@
 TROCR  - Share your file 
 **********************************
 
-**trocr** is a file sharing web application based on Flask framework 
+**trocr** is a file sharing web application based on `Flask framework <http://flask.pocoo.org>`_ 
 
 |flattr|_
 
 Features
-*************
+##############
 
 * multiple files upload
 * gallery page creation
@@ -16,16 +16,16 @@ Features
 * HTML video player and audio player for supported file
 
 Example & demo
-****************
+#################
 
 * gallery sample: `<http://trocr.bidouille.info/?g=d4641421-13fa-424b-87ae-4fb7c2a44ca7>`__
 * demo (automatically resets every 10mn): `<http://trocr-demo.bidouille.info/>`__ (login/pass = demo/demo) 
 
 Installation
-##############
+***************
 
 Flask framework
-*****************
+#################
 
 Flask framework is needed for running trocr.
 Could be installed on Debian/Ubuntu by this commands
@@ -38,7 +38,7 @@ Could be installed on Debian/Ubuntu by this commands
 But it's better to use virtualenv for more information look at `<http://flask.pocoo.org/docs/installation/>`__ 
 
 trocr
-*******
+########
 Just download andextract trocr file to a folder 
 
 .. code-block:: bash
