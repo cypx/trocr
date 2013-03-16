@@ -24,17 +24,17 @@ def page_not_found(e):
 	return render_template('error.html', error=error), 404
 
 @app.errorhandler(403)
-def page_not_found(e):
+def page_not_allowed(e):
 	error="forbidden, you are not allowed to access this page"
 	return render_template('error.html', error=error), 403
 
 @app.errorhandler(401)
-def page_not_found(e):
-	error="forbidden, you are not allowed to access this page"
+def page_not_authorized(e):
+	error="forbidden, you are not authorized to access this page"
 	return render_template('error.html', error=error), 401
 
 @app.errorhandler(413)
-def page_not_found(e):
+def upload_too_big(e):
 	error="maximum upload size exceeded.<br/>You can't upload more than "+app.config['MAX_CONTENT_LENGTH']+"in once"
 	return render_template('error.html', error=error), 413
 
