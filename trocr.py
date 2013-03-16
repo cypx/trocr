@@ -21,12 +21,12 @@ app.config.from_object('websiteconfig')
 
 def connect_db():
 	#if database do not exist, create it
-    if not os.path.isfile(app.config['DATABASE']):
-            db=sqlite3.connect(app.config['DATABASE'])
-            with app.open_resource('schema.sql') as f:
-                    db.cursor().executescript(f.read())
-            db.commit()
-            closing(db)
+	if not os.path.isfile(app.config['DATABASE']):
+		db=sqlite3.connect(app.config['DATABASE'])
+		with app.open_resource('schema.sql') as f:
+			db.cursor().executescript(f.read())
+			db.commit()
+		closing(db)
 	return sqlite3.connect(app.config['DATABASE'])
 
 
@@ -35,11 +35,11 @@ def allowed_file(filename):
 		(filename.lower()).rsplit('.', 1)[1] in (app.config['ALLOWED_EXTENSIONS'])
 
 def sizeof_fmt(num):
-    for x in ['bytes','KB','MB','GB']:
-        if num < 1024.0 and num > -1024.0:
-            return "%3.1f%s" % (num, x)
-        num /= 1024.0
-    return "%3.1f%s" % (num, 'TB')
+	for x in ['bytes','KB','MB','GB']:
+		if num < 1024.0 and num > -1024.0:
+			return "%3.1f%s" % (num, x)
+		num /= 1024.0
+	return "%3.1f%s" % (num, 'TB')
 
 def create_thumb(filename,img_width):
 	src_path=os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(filename.split('-')[1:4]) ,filename)
