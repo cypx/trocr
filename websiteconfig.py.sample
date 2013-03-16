@@ -1,9 +1,13 @@
 import os
 
+# to use current directory as base directory
 _basedir = os.path.abspath(os.path.dirname(__file__))
 
-DATABASE = os.path.join(_basedir, 'trocr.db')
+
+#allows the execution of arbitrary code, must never be used on production machines
 DEBUG = False
+
+DATABASE = os.path.join(_basedir, 'trocr.db')
 SECRET_KEY = 'replace by your own key'
 USERNAME = 'admin'
 PASSWORD = 'default'
@@ -12,7 +16,9 @@ UPLOAD_FOLDER = os.path.join(_basedir, 'data')
 #set the maximum upload file size to 16MB
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024
 THUMBNAIL_FOLDER = os.path.join(_basedir, 'thumbnail')
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'zip', 'tar', 'gz', 'png', 'jpg', 'jpeg', 'gif', 'mp4', 'mp3','webm'])
+#restrict or not uploaded file to allowed extensions
+RESTRICT_EXTENSIONS = True
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'zip', 'rar', 'tar', 'tgz', 'gz', 'jpg', 'jpeg', 'gif', 'png', 'bmp', 'tiff', 'svg', 'avi', 'mp4','webm','ogg', 'wav','mp3','ogg','aac','mpeg'])
 ALLOWED_THUMBNAIL_SIZE = set([600,150])
 IMAGE_FORMATS = set(['jpg','jpeg','gif','png','bmp','tiff','svg'])
 VIDEO_FORMATS = set(['mp4','webm','ogg'])

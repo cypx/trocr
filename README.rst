@@ -4,6 +4,8 @@ TROCR  - Share your file
 
 **trocr** is a file sharing web application based on Flask framework 
 
+|flattr|_
+
 Installation
 ##############
 
@@ -42,3 +44,10 @@ For quick test you could use:
 	$ python trocr.py
 
 Refer to your web server documentation about WSGI for production use
+
+
+
+
+.. |flattr| image:: http://api.flattr.com/button/flattr-badge-large.png
+ :alt: Flattr this git repo
+.. _flattr: https://flattr.com/submit/auto?user_id=cypx&url=https://github.com/cypx/trocr&title=trocr&language=&tags=github&category=software

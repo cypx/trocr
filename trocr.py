@@ -50,6 +50,8 @@ def connect_db():
 
 
 def allowed_file(filename):
+	if not app.config['RESTRICT_EXTENSIONS']:
+		return '.' in filename
 	return '.' in filename and \
 		(filename.lower()).rsplit('.', 1)[1] in (app.config['ALLOWED_EXTENSIONS'])
 
