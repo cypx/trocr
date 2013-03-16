@@ -18,6 +18,20 @@ from werkzeug import secure_filename
 app = Flask(__name__)
 app.config.from_object('websiteconfig')
 
+@app.errorhandler(404)
+def page_not_found(e):
+	error="Page not found"
+	return render_template('error.html', error=error), 404
+
+@app.errorhandler(403)
+def page_not_found(e):
+	error="forbidden, you are not allowed to access this page"
+	return render_template('error.html', error=error), 403
+
+@app.errorhandler(413)
+def page_not_found(e):
+	error="maximum upload size exceeded.<br/>You can't upload more than "+app.config['MAX_CONTENT_LENGTH']+"in once"
+	return render_template('error.html', error=error), 413
 
 def connect_db():
 	#if database do not exist, create it

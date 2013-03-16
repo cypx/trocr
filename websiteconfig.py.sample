@@ -9,6 +9,8 @@ USERNAME = 'admin'
 PASSWORD = 'default'
 ENTRY_BY_PAGE = 10
 UPLOAD_FOLDER = os.path.join(_basedir, 'data')
+#set the maximum upload file size to 16MB
+MAX_CONTENT_LENGTH = 16 * 1024 * 1024
 THUMBNAIL_FOLDER = os.path.join(_basedir, 'thumbnail')
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'zip', 'tar', 'gz', 'png', 'jpg', 'jpeg', 'gif', 'mp4', 'mp3','webm'])
 ALLOWED_THUMBNAIL_SIZE = set([600,150])
