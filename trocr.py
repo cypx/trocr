@@ -35,7 +35,7 @@ def page_not_authorized(e):
 
 @app.errorhandler(413)
 def upload_too_big(e):
-	error="maximum upload size exceeded.<br/>You can't upload more than "+app.config['MAX_CONTENT_LENGTH']+"in once"
+	error="maximum upload size exceeded.<br/>You can't upload more than "+str(app.config['MAX_CONTENT_LENGTH'])+"MB in once"
 	return render_template('error.html', error=error), 413
 
 def connect_db():
