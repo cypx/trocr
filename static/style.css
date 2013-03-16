@@ -8,15 +8,17 @@ h2              { font-size: 1.2em; }
                   padding: 0.8em; padding-bottom: 0em; background: white; }
 .entries        { list-style: none; margin: 0; padding: 0; }
 .entries img	{ width:100%; height: auto;}
-.entries li     { margin: 0.8em 1.2em; }
+.entries li     { margin: 0.9em 1.2em; }
 .entries li h2  { margin-left: -1em; }
+
+.linklist		{ font-size: 0.8em; }
 
 .entries .linkon{display:none; }
 .entries:target .linkon {display:inline; }
 .entries .linkoff{display:inline; }
 .entries:target .linkoff {display:none; }
 
-.textarea { font-size: 0.6em; }
+.textarea { font-size: 0.6em; width:100%;}
 
 .add-entry      { font-size: 0.9em; border-bottom: 1px solid #ccc; }
 .add-entry dl   { font-weight: bold; }

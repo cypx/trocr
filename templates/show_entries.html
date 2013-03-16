@@ -17,8 +17,8 @@
         <li><a id="id_page"><h2>Page infos</h2></a></li>
         <span class="linkoff"><a href="#infos_page" >&#x25B8; Show</a></span>
         <span class="linkon"><a href="#id_page">&#x25BE; Hide</a>
-            <p>Direct link:<br/> {% for entry in entries %}<a href="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}">{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}</a></br>{% endfor %}</p>
-            <p>HTML - Display image:</br>
+            <p>Direct link:<br/> {% for entry in entries %}<a href="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}" class="linklist">{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}</a></br>{% endfor %}</p>
+            <p>HTML - Display ink or image with link:</br>
               <textarea cols="120" rows="{{ entries_number+1 }}" class="textarea" wrap='off' />{% for entry in entries -%}
                 {#- -#}<a href="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}">{#- -#}
                 {%- if entry.type == "image" -%}
@@ -28,7 +28,7 @@
                 {%- endif -%}
                 {#- -#}</a>{%print "\r"%}{#- -#}
               {%- endfor %}</textarea></p>
-            <p>HTML - Display 600px thumb with link:</br>
+            <p>HTML - Display link or 600px thumb with link:</br>
               <textarea cols="120" rows="{{ entries_number+1 }}" class="textarea" wrap='off' />{% for entry in entries -%}
                 {#- -#}<a href="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}">{#- -#}
                 {%- if entry.type == "image" -%}
@@ -38,7 +38,7 @@
                 {%- endif -%}
                 {#- -#}</a>{%print "\r"%}{#- -#}
               {%- endfor %}</textarea></p>
-            <p>HTML - Display 150px thumb with link:</br>
+            <p>HTML - Display link or 150px thumb with link:</br>
               <textarea cols="120" rows="{{ entries_number+1 }}" class="textarea" wrap='off' />{% for entry in entries -%}
                 {#- -#}<a href="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}">{#- -#}
                 {%- if entry.type == "image" -%}
@@ -48,7 +48,7 @@
                 {%- endif -%}
                 {#- -#}</a>{%print "\r"%}{#- -#}
               {%- endfor %}</textarea></p>
-            <p>BBCode - Display image:</br>
+            <p>BBCode - Display link or image with link:</br>
               <textarea cols="120" rows="{{ entries_number+1 }}" class="textarea" wrap='off' />{% for entry in entries -%}
                 {#- -#}[url={{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}]{#- -#}
                 {%- if entry.type == "image" -%}
@@ -58,7 +58,7 @@
                 {%- endif -%}
                 {#- -#}[/url]{%print "\r"%}
               {%- endfor %}</textarea></p>
-            <p>BBCode - Display 600px thumbs with link:</br>
+            <p>BBCode - Display link or 600px thumbs with link:</br>
               <textarea cols="120" rows="{{ entries_number+1 }}" class="textarea" wrap='off' />{% for entry in entries -%}
                 {#- -#}[url={{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}]{#- -#}
                 {%- if entry.type == "image" -%}
@@ -68,7 +68,7 @@
                 {%- endif -%}
                 {#- -#}[/url]{%print "\r"%}
               {%- endfor %}</textarea></p>
-              <p>BBCode - Display 150px thumbs with link:</br>
+              <p>BBCode - Display link or 150px thumbs with link:</br>
               <textarea cols="120" rows="{{ entries_number+1 }}" class="textarea" wrap='off' />{% for entry in entries -%}
                 {#- -#}[url={{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}]{#- -#}
                 {%- if entry.type == "image" -%}
@@ -99,12 +99,16 @@
         {% elif entry.type == "video" %}
         <li><video width="320" height="240" controls>
           <source src="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}" type="{{ entry.mime }}">
-          Your browser does not support the video tag.
+          Your browser does not support the video tag.<br>
+          Download the file and save it for try to play with a dedicated software on your computer.<br>
+          <a href="{{ url_for('show_entries',_external=true,i=entry.id) }}" class="linklist">{{ url_for('show_entries',_external=true,i=entry.id) }}</a><br/>
         </video></li>
         {% elif entry.type == "audio" %}
         <li><audio controls>
           <source src="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}" type="{{ entry.mime }}">
-          Your browser does not support the audio element.
+          Your browser does not support the audio element.<br>
+          Download the file and save it for try to play with a dedicated software on your computer.<br>
+          <a href="{{ url_for('show_entries',_external=true,i=entry.id) }}" class="linklist">{{ url_for('show_entries',_external=true,i=entry.id) }}</a><br/>
         </audio></li>
         {% else %}
         <li><a href="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}">Download</a></li>
@@ -112,24 +116,23 @@
         <li><p>{{ entry.descr|safe }}</p></li>
         <li class="linkoff"><a href="#infos_{{ entry.id }}" >&#x25B8; Show infos</a><li>
         <li class="linkon">          
-          <a href="#id_{{ entry.id }}">&#x25BE; Hide infos</a>
-          <ul>
-            <li>URL: <a href="{{ url_for('show_entries',_external=true,i=entry.id) }}">{{ url_for('show_entries',_external=true,i=entry.id) }}</a></li>
-            <li>Gallery: <a href="{{ url_for('show_entries',_external=true,g=entry.gallery_id) }}">{{ url_for('show_entries',_external=true,g=entry.gallery_id) }}</a></li>
-            <li>Date: {{ entry.date }}</li>
-            <li>Type: {{ entry.type }}</li>
-            <li>Type: {{ entry.mime }}</li>
-            <li>Size: {{ entry.size }}</li>
-            <li>Direct link: <a href="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}">{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}</a></li>
-            {% if entry.type == "image" %}
-            <li>HTML - Display image: <input type="text" size="50%" value="<img src='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}' alt='{{ entry.title }}' />" /></li>
-            <li>HTML - Display 600px thumb with link: <input type="text" size="50%" value="<a href='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}''><img src='{{ url_for('show_entries',_external=true) }}tb/600/{{ entry.filename }}'alt='{{ entry.title }}' /></a>" /></li>
-            <li>HTML - Display 150px thumb with link: <input type="text" size="50%" value="<a href='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}''><img src='{{ url_for('show_entries',_external=true) }}tb/150/{{ entry.filename }}'alt='{{ entry.title }}' /></a>" /></li>
-            <li>BBCode - Display image: <input type="text" size="50%" value="[img]{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}[/img]" /></li>
-            <li>BBCode - Display 600px thumbs: <input type="text" size="50%" value="[url={{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}][img]{{ url_for('show_entries',_external=true) }}tb/600/{{ entry.filename }}[/img][/url]" /></li>
-            <li>BBCode - Display 150px thumbs: <input type="text" size="50%" value="[url={{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}][img]{{ url_for('show_entries',_external=true) }}tb/150/{{ entry.filename }}[/img][/url]" /></li>
-            {% endif %}
-          </ul></li>
+          <a href="#id_{{ entry.id }}">&#x25BE; Hide infos</a><br/><br/>
+          URL: <a href="{{ url_for('show_entries',_external=true,i=entry.id) }}" class="linklist">{{ url_for('show_entries',_external=true,i=entry.id) }}</a><br/>
+          Gallery: <a href="{{ url_for('show_entries',_external=true,g=entry.gallery_id) }}" class="linklist">{{ url_for('show_entries',_external=true,g=entry.gallery_id) }}</a><br/>
+          Date: {{ entry.date }}<br/>
+          Type: {{ entry.type }}<br/>
+          Type: {{ entry.mime }}<br/>
+          Size: {{ entry.size }}<br/>
+          Direct link: <a href="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}" class="linklist">{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}</a><br/>
+          {% if entry.type == "image" %}
+            HTML - Display link or image with link:<br/><input type="text" size="65%" value="<a href='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}''><img src='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}' alt='{{ entry.title }}' /></a>" /><br/>
+            HTML - Display link or 600px thumb with link:<br/><input type="text" size="65%" value="<a href='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}''><img src='{{ url_for('show_entries',_external=true) }}tb/600/{{ entry.filename }}'alt='{{ entry.title }}' /></a>" /><br/>
+            HTML - Display link or 150px thumb with link:<br/><input type="text" size="65%" value="<a href='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}''><img src='{{ url_for('show_entries',_external=true) }}tb/150/{{ entry.filename }}'alt='{{ entry.title }}' /></a>" /><br/>
+            BBCode - Display link or image with link:<br/><input type="text" size="65%" value="[url={{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}][img]{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}[/img][/url]" /><br/>
+            BBCode - Display link or 600px thumbs with link:<br/><input type="text" size="65%" value="[url={{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}][img]{{ url_for('show_entries',_external=true) }}tb/600/{{ entry.filename }}[/img][/url]" /><br/>
+            BBCode - Display link or 150px thumbs with link:<br/><input type="text" size="65%" value="[url={{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}][img]{{ url_for('show_entries',_external=true) }}tb/150/{{ entry.filename }}[/img][/url]" /><br/>
+          {% endif %}
+          </li>
       </ul>
     {% else %}
     <ul class=entries>
