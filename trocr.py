@@ -181,6 +181,7 @@ def add_entry():
 	add_success=0
 	add_fail=0
 	for file in uploaded_files:
+		file.filename=file.filename.encode('utf-8')
 		if file and allowed_file(file.filename):
 			file_title=file.filename.rsplit('.', 1)[0]
 			file_upload_name = secure_filename(file.filename)
@@ -209,7 +210,7 @@ def add_entry():
 	if add_success!=0:flash(str(add_success)+' file(s) was successfully posted')
 	if add_fail!=0:flash(str(add_fail)+' file(s) aborted, corrupt or unallowed file')
 	if 'addinfo' in request.form:
-		return redirect(url_for('edit_entry')+"?i="+gallery_uuid)
+		return redirect(url_for('edit_entry')+"?g="+gallery_uuid)
 	else:
 		return redirect(url_for('show_entries'))
 
@@ -223,8 +224,8 @@ def edit_entry():
 		for entry_id in request.form.getlist("entry_id"):
 			g.db.execute('UPDATE entries  SET title="{title}", descr="{descr}" WHERE filename like "{pid}.%";'.format(
 				pid=entry_id,
-				title=request.form['title'+"_"+entry_id],
-				descr=request.form['descr'+"_"+entry_id]))
+				title=request.form['title'+"_"+entry_id].encode('utf-8'),
+				descr=request.form['descr'+"_"+entry_id].encode('utf-8')))
 			g.db.commit()
 			update_success=update_success+1
 		for del_id in request.form.getlist("del_id"):
@@ -267,7 +268,8 @@ def edit_entry():
 			date=time.strftime("%D %H:%M",
 			time.localtime(int(row[1]))),
 			id=row[3].rsplit('.', 1)[0],
-			descr=row[2], filename=row[3],
+			descr=row[2],
+			filename=row[3],
 			size=sizeof_fmt(row[4]),
 			mime=row[5],
 			type=row[5].split("/")[0]) for row in cur.fetchall()]
