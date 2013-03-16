@@ -3,7 +3,7 @@
 {% block body %}
   {% if (session.logged_in) and (requested_id=="")  %}
     <form method="POST" enctype="multipart/form-data" action="{{ url_for('add_entry') }}" class="add-entry">
-        <dt>File (you can select multiple file, max size {{ max_upload_size }}):
+        <dt>File (you can select multiple file, max size {{ max_upload_size }}MB):
         <dd><input type="file" name="file" multiple="" size="20"/>
         <dt><input type="checkbox" name="addinfo" /> Check, if you want to personnalize title and/or add comments for each file
         <dt><input type=submit value=Share><input type="hidden" value="{{ requested_gallery }}" name="requested_gallery" />
