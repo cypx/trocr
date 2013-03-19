@@ -94,12 +94,12 @@ def show_entries():
 	else:
 		logged=True
 	if (requested_id == '') & (requested_gallery == '') & (logged):
-		cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id FROM entries ORDER BY id desc')
+		cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries ORDER BY id desc')
 	elif (requested_id != ''):
-		cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id FROM entries WHERE filename like "{pid}.%" ORDER BY id desc;'.format(
+		cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE filename like "{pid}.%" ORDER BY id desc;'.format(
 			pid=requested_id))
 	elif (requested_gallery != ''):
-		cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id FROM entries WHERE gallery_id="{gid}" ORDER BY id asc;'.format(
+		cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE gallery_id="{gid}" ORDER BY id asc;'.format(
 			gid=requested_gallery))
 	else:
 		cur = g.db.cursor()
@@ -111,7 +111,8 @@ def show_entries():
 		size=sizeof_fmt(row[4]),
 		mime=row[5],
 		type=row[5].split("/")[0],
-		gallery_id=row[6]
+		gallery_id=row[6],
+		author_id=row[7]
 		) for row in cur.fetchall()]
 	selected_entries = []
 	start_from_entry = app.config['ENTRY_BY_PAGE']*(int(currentpage)-1)
@@ -136,12 +137,13 @@ def show_entries():
 def login():
 	error = None
 	if request.method == 'POST':
-		if request.form['username'] != app.config['USERNAME']:
+		if request.form['username'] not in app.config['USERS']:
 			error = 'Invalid username'
-		elif request.form['password'] != app.config['PASSWORD']:
+		elif request.form['password'] != app.config['USERS'].get(request.form['username']):
 			error = 'Invalid password'
 		else:
 			session['logged_in'] = True
+			session['id'] = request.form['username']
 			flash('You were logged in')
 			return redirect(url_for('show_entries'))
 	return render_template('login.html', error=error)
@@ -149,6 +151,7 @@ def login():
 @app.route('/logout')
 def logout():
 	session.pop('logged_in', None)
+	session.pop('id', None)
 	flash('You were logged out')
 	return redirect(url_for('show_entries'))
 
@@ -196,7 +199,7 @@ def add_entry():
 			dictionnary=string.ascii_letters+string.digits # alphanumeric, upper and lowercase
 			g.db.execute('INSERT INTO entries (title, author_id, gallery_id, date, descr, filename, size, mime) VALUES ("{title}", "{aid}", "{gid}", "{date}", "{descr}", "{filename}", "{size}", "{mime}");'.format(
 				title=file_title,
-				aid=app.config['USERNAME'],
+				aid=session.get('id'),
 				gid=gallery_uuid,
 				date=time.time(),
 				descr="",
@@ -256,12 +259,12 @@ def edit_entry():
 		requested_id = request.args.get('i', '')
 		requested_gallery = request.args.get('g', '')
 		if (requested_id == '') & (requested_gallery == ''):
-			cur = g.db.execute('SELECT title, date, descr, filename, size, mime FROM entries order by id desc')
+			cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries order by id desc')
 		elif (requested_id != ''):
-			cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id FROM entries WHERE filename like "{pid}.%" ORDER BY id desc;'.format(
+			cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE filename like "{pid}.%" ORDER BY id desc;'.format(
 				pid=requested_id))
 		elif (requested_gallery != ''):
-			cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id FROM entries WHERE gallery_id="{gid}" ORDER BY id asc;'.format(
+			cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE gallery_id="{gid}" ORDER BY id asc;'.format(
 				gid=requested_gallery))
 		entries = [dict(
 			title=row[0],
@@ -272,7 +275,8 @@ def edit_entry():
 			filename=row[3],
 			size=sizeof_fmt(row[4]),
 			mime=row[5],
-			type=row[5].split("/")[0]) for row in cur.fetchall()]
+			type=row[5].split("/")[0],
+			author_id=row[7]) for row in cur.fetchall()]
 		return render_template('edit_entries.html', entries=entries)
 
 if __name__ == '__main__':

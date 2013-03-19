@@ -122,6 +122,7 @@
           Type: {{ entry.type }}<br/>
           Type: {{ entry.mime }}<br/>
           Size: {{ entry.size }}<br/>
+          Uploaded by: {{ entry.author_id }}<br/>
           Direct link: <a href="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}" class="linklist">{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}</a><br/>
           {% if entry.type == "image" %}
             HTML - Display link or image with link:<br/><input type="text" size="65" value="<a href='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}''><img src='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}' alt='{{ entry.title }}' /></a>" /><br/>

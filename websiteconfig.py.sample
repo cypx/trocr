@@ -9,8 +9,8 @@ DEBUG = False
 
 DATABASE = os.path.join(_basedir, 'trocr.db')
 SECRET_KEY = 'replace by your own key'
-USERNAME = 'admin'
-PASSWORD = 'default'
+#users lists, place here any number of {'username': 'password'} separated by comma
+USERS = {'john': 'pass4john', 'demo': 'demo'}
 ENTRY_BY_PAGE = 10
 UPLOAD_FOLDER = os.path.join(_basedir, 'data')
 #set the maximum upload file size to 16MB
