@@ -15,8 +15,8 @@
   {% if entries_number > 1 %}
     <ul id="infos_page" class=entries>
         <li><a id="id_page"><h2>Page infos</h2></a></li>
-        <span class="linkoff"><a href="#infos_page" >&#x25B8; Show</a></span>
-        <span class="linkon"><a href="#id_page">&#x25BE; Hide</a>
+        <li class="linkoff"><a href="#infos_page" >&#x25B8; Show</a></li>
+        <li class="linkon"><a href="#id_page">&#x25BE; Hide</a>
             <p>Direct link:<br/> {% for entry in entries %}<a href="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}" class="linklist">{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}</a><br/>{% endfor %}</p>
             <p>HTML - Display ink or image with link:<br/>
               <textarea cols="120" rows="{{ entries_number+1 }}" class="textarea" wrap='off' >{% for entry in entries -%}
@@ -78,7 +78,7 @@
                 {%- endif -%}
                 {#- -#}[/url]{%print "\r"%}
               {%- endfor %}</textarea></p>
-            </span>
+            </li>
     </ul>
     {% endif %}
     {% for entry in entries %}
