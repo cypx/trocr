@@ -13,10 +13,14 @@ from uuid import uuid4
 from flask import Flask, request, session, g, redirect, url_for, \
 	abort, render_template, flash, send_from_directory
 from werkzeug import secure_filename
+from werkzeug.contrib.cache import SimpleCache
 
 # create application
 app = Flask(__name__)
 app.config.from_object('websiteconfig')
+# create cache 
+cache = SimpleCache()
+
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -91,6 +95,9 @@ def show_entries():
 	if currentpage == "": currentpage="1"
 	if not session.get('logged_in'):
 		logged=False
+		cached_page=cache.get('i'+requested_id+'g'+requested_gallery+'p'+currentpage)
+		if cached_page is not None:
+			return cached_page
 	else:
 		logged=True
 	if (requested_id == '') & (requested_gallery == '') & (logged):
@@ -124,7 +131,7 @@ def show_entries():
 	for entry in range(start_from_entry ,end_to_entry):
 		if entry < len(all_entries):
 			selected_entries.append(all_entries[entry])
-	return render_template('show_entries.html',
+	page_rendered= render_template('show_entries.html',
 		entries=selected_entries,
 		previouspage=previouspage,
 		nextpage=nextpage,
@@ -132,6 +139,9 @@ def show_entries():
 		requested_id=requested_id,
 		entries_number=len(selected_entries),
 		max_upload_size=str((app.config['MAX_CONTENT_LENGTH'])/ 1024 / 1024))
+	if not logged
+		cache.set('i'+requested_id+'g'+requested_gallery+'p'+currentpage, page_rendered, timeout=60 * 60)
+	return page_render
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
