@@ -18,7 +18,7 @@ h2              { font-size: 1.2em; }
 .entries .linkoff{display:inline; }
 .entries:target .linkoff {display:none; }
 
-.textarea { font-size: 0.6em; width:100%;}
+.textarea 		{ font-size: 0.6em; width:100%;  white-space:nowrap; }
 
 .add-entry      { font-size: 0.9em; border-bottom: 1px solid #ccc; }
 .add-entry dl   { font-weight: bold; }
