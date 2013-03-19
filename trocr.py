@@ -139,7 +139,7 @@ def show_entries():
 		requested_id=requested_id,
 		entries_number=len(selected_entries),
 		max_upload_size=str((app.config['MAX_CONTENT_LENGTH'])/ 1024 / 1024))
-	if not logged
+	if not logged:
 		cache.set('i'+requested_id+'g'+requested_gallery+'p'+currentpage, page_rendered, timeout=60 * 60)
 	return page_render
 
