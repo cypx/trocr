@@ -69,7 +69,7 @@
                 {#- -#}[/url]{%print "\r"%}
               {%- endfor %}</textarea></p>
               <p>BBCode - Display link or 150px thumbs with link:<br/>
-              <textarea cols="120" rows="{{ entries_number+1 }}" class="textarea" wrap='off' />{% for entry in entries -%}
+              <textarea cols="120" rows="{{ entries_number+1 }}" class="textarea" wrap='off' >{% for entry in entries -%}
                 {#- -#}[url={{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}]{#- -#}
                 {%- if entry.type == "image" -%}
                   {#- -#}[img]{{ url_for('show_entries',_external=true) }}tb/150/{{ entry.filename }}[/img]{#- -#}
@@ -79,7 +79,6 @@
                 {#- -#}[/url]{%print "\r"%}
               {%- endfor %}</textarea></p>
             </span>
-          </ul></li>
     </ul>
     {% endif %}
     {% for entry in entries %}
@@ -125,12 +124,12 @@
           Size: {{ entry.size }}<br/>
           Direct link: <a href="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}" class="linklist">{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}</a><br/>
           {% if entry.type == "image" %}
-            HTML - Display link or image with link:<br/><input type="text" size="65%" value="<a href='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}''><img src='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}' alt='{{ entry.title }}' /></a>" /><br/>
-            HTML - Display link or 600px thumb with link:<br/><input type="text" size="65%" value="<a href='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}''><img src='{{ url_for('show_entries',_external=true) }}tb/600/{{ entry.filename }}'alt='{{ entry.title }}' /></a>" /><br/>
-            HTML - Display link or 150px thumb with link:<br/><input type="text" size="65%" value="<a href='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}''><img src='{{ url_for('show_entries',_external=true) }}tb/150/{{ entry.filename }}'alt='{{ entry.title }}' /></a>" /><br/>
-            BBCode - Display link or image with link:<br/><input type="text" size="65%" value="[url={{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}][img]{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}[/img][/url]" /><br/>
-            BBCode - Display link or 600px thumbs with link:<br/><input type="text" size="65%" value="[url={{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}][img]{{ url_for('show_entries',_external=true) }}tb/600/{{ entry.filename }}[/img][/url]" /><br/>
-            BBCode - Display link or 150px thumbs with link:<br/><input type="text" size="65%" value="[url={{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}][img]{{ url_for('show_entries',_external=true) }}tb/150/{{ entry.filename }}[/img][/url]" /><br/>
+            HTML - Display link or image with link:<br/><input type="text" size="65" value="<a href='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}''><img src='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}' alt='{{ entry.title }}' /></a>" /><br/>
+            HTML - Display link or 600px thumb with link:<br/><input type="text" size="65" value="<a href='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}''><img src='{{ url_for('show_entries',_external=true) }}tb/600/{{ entry.filename }}'alt='{{ entry.title }}' /></a>" /><br/>
+            HTML - Display link or 150px thumb with link:<br/><input type="text" size="65" value="<a href='{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}''><img src='{{ url_for('show_entries',_external=true) }}tb/150/{{ entry.filename }}'alt='{{ entry.title }}' /></a>" /><br/>
+            BBCode - Display link or image with link:<br/><input type="text" size="65" value="[url={{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}][img]{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}[/img][/url]" /><br/>
+            BBCode - Display link or 600px thumbs with link:<br/><input type="text" size="65" value="[url={{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}][img]{{ url_for('show_entries',_external=true) }}tb/600/{{ entry.filename }}[/img][/url]" /><br/>
+            BBCode - Display link or 150px thumbs with link:<br/><input type="text" size="65" value="[url={{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}][img]{{ url_for('show_entries',_external=true) }}tb/150/{{ entry.filename }}[/img][/url]" /><br/>
           {% endif %}
           </li>
       </ul>
