@@ -60,8 +60,19 @@ For quick test you could use:
 
 Refer to `<http://flask.pocoo.org/docs/deploying/>`__  and your web server documentation about WSGI for production use
 
+If you want to enable `MediaElements.js<http://mediaelementjs.com/>`_ first you need to download and extract it's build folder content into static/mediaelement directory:
 
+.. code-block:: bash
 
+	$ mkdir static/mediaelement
+	$ cd static/mediaelement
+	$ curl -L https://github.com/johndyer/mediaelement/archive/master.tar.gz | tar zx --strip-components=2 --wildcards "*/build/*"
+
+After that do not forget to activate it into webconfig.py
+
+.. code-block:: python
+
+	$ ENABLE_MEDIAELEMENT = True
 
 .. |flattr| image:: http://api.flattr.com/button/flattr-badge-large.png
  :alt: Flattr this git repo

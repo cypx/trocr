@@ -96,14 +96,14 @@
             </a>
         </li>
         {% elif entry.type == "video" %}
-        <li><video width="480" controls="controls" preload="metadata">
+        <li><video width="480" style="width:100%;height:100%;" controls="controls" preload="none">
           <source src="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}" type="{{ entry.mime }}">
           Your browser does not support the video tag.<br>
           Download the file and save it for try to play with a dedicated software on your computer.<br>
           <a href="{{ url_for('show_entries',_external=true,i=entry.id) }}" class="linklist">{{ url_for('show_entries',_external=true,i=entry.id) }}</a><br/>
         </video></li>
         {% elif entry.type == "audio" %}
-        <li><audio controls="controls" preload="metadata">
+        <li><audio controls="controls" preload="none">
           <source src="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}" type="{{ entry.mime }}">
           Your browser does not support the audio element.<br>
           Download the file and save it for try to play with a dedicated software on your computer.<br>
@@ -119,7 +119,6 @@
           URL: <a href="{{ url_for('show_entries',_external=true,i=entry.id) }}" class="linklist">{{ url_for('show_entries',_external=true,i=entry.id) }}</a><br/>
           Gallery: <a href="{{ url_for('show_entries',_external=true,g=entry.gallery_id) }}" class="linklist">{{ url_for('show_entries',_external=true,g=entry.gallery_id) }}</a><br/>
           Date: {{ entry.date }}<br/>
-          Type: {{ entry.type }}<br/>
           Type: {{ entry.mime }}<br/>
           Size: {{ entry.size }}<br/>
           Uploaded by: {{ entry.author_id }}<br/>

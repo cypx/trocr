@@ -1,7 +1,16 @@
 <!doctype html>
+<html>
+<head>
 <title>trocr</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />
+{% if config['ENABLE_MEDIAELEMENT'] %}
+<script src="{{ url_for('static', filename='mediaelement/jquery.js') }}"></script>
+<script src="{{ url_for('static', filename='mediaelement/mediaelement-and-player.min.js') }}"></script>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='mediaelement/mediaelementplayer.css') }}" />
+{% endif %}
+</head>
+<body>
 <div class=page>
   <h1><a href={{ url_for('show_entries') }}>trocr</a></h1>
   <div class=metanav>
@@ -19,3 +28,12 @@
   <h3><a href="https://github.com/cypx/trocr">Get trocr on Github</a></h3>
   </div>
 </div>
+{% if config['ENABLE_MEDIAELEMENT'] %}
+<script>
+// using jQuery
+$('video,audio').mediaelementplayer({
+  });
+</script>
+{% endif %}
+</body>
+</html>

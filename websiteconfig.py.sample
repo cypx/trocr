@@ -23,5 +23,7 @@ ALLOWED_THUMBNAIL_SIZE = set([600,150])
 IMAGE_FORMATS = set(['jpg','jpeg','gif','png','bmp','tiff','svg'])
 VIDEO_FORMATS = set(['mp4','webm','ogg'])
 AUDIO_FORMATS = set(['wav','mp3','ogg','aac','mpeg'])
+#before enabling mediaelement.js you need to install it, look at the README
+ENABLE_MEDIAELEMENT = False
 
 del os

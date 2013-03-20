@@ -10,5 +10,6 @@ lib/
 lib64
 data/
 thumbnail/
+static/mediaelement/
 trocr.db
 websiteconfig.py
