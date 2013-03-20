@@ -72,7 +72,7 @@ After that do not forget to activate it into webconfig.py
 
 .. code-block:: python
 
-	$ ENABLE_MEDIAELEMENT = True
+	ENABLE_MEDIAELEMENT = True
 
 .. |flattr| image:: http://api.flattr.com/button/flattr-badge-large.png
  :alt: Flattr this git repo

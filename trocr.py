@@ -92,14 +92,19 @@ def show_entries():
 	requested_id = request.args.get('i', '')
 	requested_gallery = request.args.get('g', '')
 	currentpage = request.args.get('p', '')
-	if currentpage == "": currentpage="1"
 	if not session.get('logged_in'):
 		logged=False
-		cached_page=cache.get('i'+requested_id+'g'+requested_gallery+'p'+currentpage)
+		if requested_id != "":
+			cached_page=cache.get('i'+requested_id+'gp')
+		elif requested_gallery != "":
+			cached_page=cache.get('ig'+requested_gallery+'p'+currentpage)
+		else:
+			cached_page = None
 		if cached_page is not None:
 			return cached_page
 	else:
 		logged=True
+	if currentpage == "": currentpage="1"
 	if (requested_id == '') & (requested_gallery == '') & (logged):
 		cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries ORDER BY id desc')
 	elif (requested_id != ''):
@@ -140,7 +145,10 @@ def show_entries():
 		entries_number=len(selected_entries),
 		max_upload_size=str((app.config['MAX_CONTENT_LENGTH'])/ 1024 / 1024))
 	if not logged:
-		cache.set('i'+requested_id+'g'+requested_gallery+'p'+currentpage, page_rendered, timeout=60 * 60)
+		if requested_id != "":
+			cache.set('i'+requested_id+'gp', page_rendered, timeout=60 * 60)
+		elif requested_gallery != "":
+			cache.set('ig'+requested_gallery+'p'+currentpage, page_rendered, timeout=60 * 60)
 	return page_rendered
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -264,6 +272,15 @@ def edit_entry():
 			del_success=del_success+1
 		if update_success!=0:flash(str(update_success)+' file(s) was successfully updated')
 		if del_success!=0:flash(str(del_success)+' file(s) was successfully deleted')
+		for entry_id in request.form.getlist("entry_id"):
+			cache.delete('i'+entry_id+'gp')
+		for gallery_id in request.form.getlist("gallery_id"):
+			cache.delete('ig'+gallery_id+'p')
+			gallery_page=1
+			cached_page=cache.delete('ig'+gallery_id+'p'+gallery_page)
+			while cached_page is not None:
+				gallery_page=gallery_page+1
+				cached_page=cache.delete('ig'+gallery_id+'p'+gallery_page)
 		return redirect(url_for('show_entries'))
 	if request.method == 'GET':
 		requested_id = request.args.get('i', '')
@@ -286,6 +303,7 @@ def edit_entry():
 			size=sizeof_fmt(row[4]),
 			mime=row[5],
 			type=row[5].split("/")[0],
+			gallery_id=row[6],
 			author_id=row[7]) for row in cur.fetchall()]
 		return render_template('edit_entries.html', entries=entries)
 

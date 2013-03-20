@@ -43,7 +43,7 @@
         <dd><textarea name="descr_{{ entry.id }}" rows=5 cols=40>{{ entry.descr|safe }}</textarea>
         <dd><input type=submit value="Update" /> (all modified entries of this page wille be updated)
         <dt>Mark for deletion <input type="checkbox" name="del_id" value="{{ entry.id }}" />
-          <input type="hidden" value="{{ entry.id }}" name="entry_id" />
+          <input type="hidden" value="{{ entry.id }}" name="entry_id" /><input type="hidden" value="{{ gallery_id }}" name="gallery_id" />
     {% else %}
     <ul class=entries>
       <li><em>Unbelievable.  No entries here so far</em>

@@ -13,6 +13,7 @@
     </form>
   {% endif %}
   {% if entries_number > 1 %}
+  <div class=pageinfo>
     <ul id="infos_page" class=entries>
         <li><a id="id_page"><h2>Page infos</h2></a></li>
         <li class="linkoff"><a href="#infos_page" >&#x25B8; Show</a></li>
@@ -80,7 +81,9 @@
               {%- endfor %}</textarea></p>
             </li>
     </ul>
+     </div>
     {% endif %}
+
     {% for entry in entries %}
     <ul id="infos_{{ entry.id }}" class=entries>
         <li>
