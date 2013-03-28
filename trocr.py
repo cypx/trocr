@@ -93,7 +93,6 @@ def show_entries():
 	requested_gallery = request.args.get('g', '')
 	currentpage = request.args.get('p', '')
 	if not session.get('logged_in'):
-		logged=False
 		if requested_id != "":
 			cached_page=cache.get('i'+requested_id+'gp')
 		elif requested_gallery != "":
@@ -102,11 +101,16 @@ def show_entries():
 			cached_page = None
 		if cached_page is not None:
 			return cached_page
+		logged = False
 	else:
-		logged=True
+		logged = True
 	if currentpage == "": currentpage="1"
 	if (requested_id == '') & (requested_gallery == '') & (logged):
-		cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries ORDER BY id desc')
+		if session['id'] in app.config['ADMINS']:
+			cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries ORDER BY id desc')
+		else:
+			cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE author_id="{aid}" ORDER BY id desc'.format(
+			aid=session['id']))
 	elif (requested_id != ''):
 		cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE filename like "{pid}.%" ORDER BY id desc;'.format(
 			pid=requested_id))
@@ -154,14 +158,20 @@ def show_entries():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 	error = None
+	allowed = app.config['USERS'].copy()
+	allowed.update(app.config['ADMINS'])
 	if request.method == 'POST':
-		if request.form['username'] not in app.config['USERS']:
+		if request.form['username'] not in allowed:
 			error = 'Invalid username'
-		elif request.form['password'] != app.config['USERS'].get(request.form['username']):
+		elif request.form['password'] != allowed.get(request.form['username']):
 			error = 'Invalid password'
 		else:
 			session['logged_in'] = True
 			session['id'] = request.form['username']
+			if session['id'] in app.config['ADMINS']:
+				session['admin'] = True
+			else:
+				session['admin'] = False
 			flash('You were logged in')
 			return redirect(url_for('show_entries'))
 	return render_template('login.html', error=error)
@@ -286,12 +296,26 @@ def edit_entry():
 		requested_id = request.args.get('i', '')
 		requested_gallery = request.args.get('g', '')
 		if (requested_id == '') & (requested_gallery == ''):
-			cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries order by id desc')
+			if session['id'] in app.config['ADMINS']:
+				cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries ORDER BY id desc')
+			else:
+				cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE author_id="{aid}" ORDER BY id desc'.format(
+				aid=session['id']))
 		elif (requested_id != ''):
-			cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE filename like "{pid}.%" ORDER BY id desc;'.format(
-				pid=requested_id))
+			if session['id'] in app.config['ADMINS']:
+				cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE filename LIKE "{pid}.%" ORDER BY id desc;'.format(
+					pid=requested_id))
+			else:
+				cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE filename LIKE "{pid}.%" AND author_id="{aid}" ORDER BY id desc;'.format(
+					aid=session['id'],
+					pid=requested_id))
 		elif (requested_gallery != ''):
-			cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE gallery_id="{gid}" ORDER BY id asc;'.format(
+			if session['id'] in app.config['ADMINS']:
+				cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE gallery_id="{gid}" ORDER BY id asc;'.format(
+				gid=requested_gallery))
+			else:
+				cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE gallery_id="{gid}" AND author_id="{aid}" ORDER BY id asc;'.format(
+				aid=session['id'],
 				gid=requested_gallery))
 		entries = [dict(
 			title=row[0],

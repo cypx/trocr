@@ -9,7 +9,8 @@ Changelog
 next release
 *******************
 
-* Add multiple users support
+* Separate admin and user account
+* Add multiple users and admins support
 * Fixes and enhancements for html code for html code
 * Cache support (better performance)
 * Add optional `MediaElements.js<http://mediaelementjs.com/>`_ support (javascript module to enhance <video> and <audio> support)
