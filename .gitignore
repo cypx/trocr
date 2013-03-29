@@ -1,5 +1,6 @@
 *~
 *.pyc
+*.sublime-workspace
 .directory
 dist
 *.egg-info
