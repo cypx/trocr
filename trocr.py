@@ -18,7 +18,7 @@ from werkzeug.contrib.cache import SimpleCache
 # create application
 app = Flask(__name__)
 app.config.from_object('websiteconfig')
-# create cache 
+# create cache
 cache = SimpleCache()
 
 
@@ -135,7 +135,7 @@ def show_entries():
 	end_to_entry = (app.config['ENTRY_BY_PAGE']*int(currentpage))-1
 	if int(currentpage)>1: previouspage=int(currentpage)-1
 	else: previouspage=0
-	if end_to_entry < len(all_entries): nextpage=int(currentpage)+1 
+	if end_to_entry < len(all_entries): nextpage=int(currentpage)+1
 	else: nextpage=0
 	for entry in range(start_from_entry ,end_to_entry):
 		if entry < len(all_entries):
@@ -270,16 +270,17 @@ def edit_entry():
 					if os.listdir(rm_dir) == []:
 						os.rmdir(rm_dir)
 			for size in app.config['ALLOWED_THUMBNAIL_SIZE']:
-				if os.path.exists(os.path.join(app.config['THUMBNAIL_FOLDER'], size, '/'.join(filename.split('-')[1:4]), filename)):
-					os.remove(os.path.join(app.config['THUMBNAIL_FOLDER'], size, '/'.join(filename.split('-')[1:4]), filename))
+				if os.path.exists(os.path.join(app.config['THUMBNAIL_FOLDER'], str(size), '/'.join(filename.split('-')[1:4]), filename)):
+					os.remove(os.path.join(app.config['THUMBNAIL_FOLDER'], str(size), '/'.join(filename.split('-')[1:4]), filename))
 				for dir_level in range(4,1,-1):
-					if os.path.exists(os.path.join(app.config['THUMBNAIL_FOLDER'], size, '/'.join(filename.split('-')[1:dir_level]))):
-						rm_dir=os.path.join(app.config['THUMBNAIL_FOLDER'], size, '/'.join(filename.split('-')[1:dir_level]))
+					if os.path.exists(os.path.join(app.config['THUMBNAIL_FOLDER'], str(size), '/'.join(filename.split('-')[1:dir_level]))):
+						rm_dir=os.path.join(app.config['THUMBNAIL_FOLDER'], str(size), '/'.join(filename.split('-')[1:dir_level]))
 						if os.listdir(rm_dir) == []:
 							os.rmdir(rm_dir)
 			g.db.execute('DELETE FROM entries  WHERE filename like "{pid}.%";'.format(pid=del_id))
 			g.db.commit()
 			del_success=del_success+1
+			update_success=update_success-1
 		if update_success!=0:flash(str(update_success)+' file(s) was successfully updated')
 		if del_success!=0:flash(str(del_success)+' file(s) was successfully deleted')
 		for entry_id in request.form.getlist("entry_id"):
@@ -287,10 +288,10 @@ def edit_entry():
 		for gallery_id in request.form.getlist("gallery_id"):
 			cache.delete('ig'+gallery_id+'p')
 			gallery_page=1
-			cached_page=cache.delete('ig'+gallery_id+'p'+gallery_page)
+			cached_page=cache.delete('ig'+str(gallery_id)+'p'+str(gallery_page))
 			while cached_page is not None:
 				gallery_page=gallery_page+1
-				cached_page=cache.delete('ig'+gallery_id+'p'+gallery_page)
+				cached_page=cache.delete('ig'+str(gallery_id)+'p'+str(gallery_page))
 		return redirect(url_for('show_entries'))
 	if request.method == 'GET':
 		requested_id = request.args.get('i', '')
