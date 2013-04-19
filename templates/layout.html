@@ -84,6 +84,7 @@
 
   function updateOutput() {
     var output = [];
+    var total_size = 0;
 
     for (var f in filelist) {
       if (typeof filelist[f-1] != undefined) {
@@ -103,10 +104,15 @@
         + escape((filelist[f].file).name)+ '</strong>' + ' - '+
         humanSize((filelist[f].file).size)+
         '</li>');
-      if (f==filelist.length) {
-        output.push(' p='+p+' f='+f+' </ul>');
+      if (f==filelist.length-1) {
+        output.push('</ul>');
       }
+
+      total_size+=(filelist[f].file).size;
     }
+
+    output.push('<br/>Total size: '+humanSize(total_size));
+
     document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
   }
 
