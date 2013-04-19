@@ -7,6 +7,7 @@ import string
 import random
 import time
 import os
+import shutil
 import mimetypes
 import Image
 from uuid import uuid4
@@ -72,12 +73,18 @@ def create_thumb(filename,img_width):
 	dest_path = os.path.join(dest_dir, filename)
 	size = img_width, img_width*100
 	if not os.path.exists(dest_dir):os.makedirs(dest_dir)
-	try:
-		im = Image.open(src_path)
-		im.thumbnail(size, Image.ANTIALIAS)
-		im.save(dest_path)
-	except IOError:
-		print "cannot create thumbnail for '%s'" % filename
+	if (mimetypes.guess_type(src_path))[0]=="image/gif":
+		try:
+			shutil.copyfile(src_path,dest_path)
+		except IOError:
+			print "cannot create thumbnail for '%s'" % filename
+	else:
+		try:
+			im = Image.open(src_path)
+			im.thumbnail(size, Image.ANTIALIAS)
+			im.save(dest_path)
+		except IOError:
+			print "cannot create thumbnail for '%s'" % filename
 
 @app.before_request
 def before_request():
