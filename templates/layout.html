@@ -9,6 +9,7 @@
 <script src="{{ url_for('static', filename='mediaelement/mediaelement-and-player.min.js') }}"></script>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='mediaelement/mediaelementplayer.css') }}" />
 {% endif %}
+
 </head>
 <body>
 <div class=page>
@@ -28,12 +29,140 @@
   <h3><a href="https://github.com/cypx/trocr">Get trocr on Github</a></h3>
   </div>
 </div>
+
 {% if config['ENABLE_MEDIAELEMENT'] %}
 <script>
-// using jQuery
-$('video,audio').mediaelementplayer({
-  });
+  // using jQuery
+  $('video,audio').mediaelementplayer({
+    });
 </script>
 {% endif %}
+
+{% if config['ENABLE_JSUPLOAD'] %}
+<script>
+
+  var upload_id = 0;
+
+  var filelist = [];
+
+
+  function humanSize(size) {
+    if(size<(1024*1024)){
+        return Math.floor(size/1024) + ' kB';
+    } else {
+        return Math.floor(size/(1024*1024)) + ' MB';
+    }
+  }
+
+  function removeFromList(list,id) {
+    var input_to_delete = document.getElementById('files['+id+']');
+    input_to_delete.parentNode.removeChild(input_to_delete);
+
+    var to_del_start=-1;
+    var to_del_end=-1;
+
+    for (var f in list) {
+      if (to_del_start==-1){
+        if (list[f].id==id) {
+          to_del_start=f;
+          to_del_end=f;
+        }
+      } else {
+         if (list[f].id==id) {
+          to_del_end=f;
+        }
+      }
+    }
+
+    if (to_del_start!=-1) {
+      list.splice(to_del_start, to_del_end - to_del_start +1);
+    }
+
+    updateOutput();
+
+  }
+
+  function updateOutput() {
+    var output = [];
+
+    for (var f in filelist) {
+      if (typeof filelist[f-1] != undefined) {
+        var p = f-1;
+      } else {
+        var p = 0;
+      }
+
+      if (f==0) {
+        output.push('<ul><a href="#" onclick="removeFromList(filelist,'
+          +filelist[f].id+');">Remove</a>');
+      } else if (filelist[f].id!=filelist[p].id) {
+        output.push('</ul><br/><ul><a href="#" onclick="removeFromList(filelist,'
+          +filelist[f].id+');">Remove</a>');
+      }
+      output.push('<li><strong>'
+        + escape((filelist[f].file).name)+ '</strong>' + ' - '+
+        humanSize((filelist[f].file).size)+
+        '</li>');
+      if (f==filelist.length) {
+        output.push(' p='+p+' f='+f+' </ul>');
+      }
+    }
+    document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
+  }
+
+ function handleFileSelect(evt) {
+  var clone = document.getElementById('temp_files').cloneNode(true);
+
+  clone.name="file";
+  clone.id="files["+upload_id+"]";
+
+
+  var files = evt.target.files; // FileList object
+
+    var alreadyexist = 0;
+
+    // files is a FileList of File objects. List some properties.
+    for (var i = 0, f; f = files[i]; i++) {
+      var exist= false;
+      for (var x in filelist) {
+        if ((filelist[x].file.name==f.name)&&(filelist[x].file.size==f.size)){
+          exist=true;
+          alreadyexist++;
+        }
+      }
+      if (!exist) {
+        filelist.push({
+          id: upload_id,
+          file: f
+        });
+      }
+    }
+    updateOutput();
+
+    upload_id++;
+
+    if (alreadyexist>0) {
+      alert(alreadyexist+" file(s) already added")
+    }
+
+
+
+  document.getElementById('temp_files').value="";
+  document.getElementById('temp_files').name="temp_files";
+
+  document.getElementById('hidden_list').appendChild(document.createElement('br'));
+  document.getElementById('hidden_list').appendChild(clone);
+
+ }
+
+  var inputlist = document.getElementById('files');
+  inputlist.id="temp_files";
+  inputlist.addEventListener('change', handleFileSelect, false);
+
+
+
+</script>
+{% endif %}
+
 </body>
 </html>

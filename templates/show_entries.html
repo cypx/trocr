@@ -1,16 +1,19 @@
- 
+
 {% extends "layout.html" %}
 {% block body %}
   {% if (session.logged_in) and (requested_id=="")  %}
-    <form method="POST" enctype="multipart/form-data" action="{{ url_for('add_entry') }}" class="add-entry">
-        <dt>File (you can select multiple file, max size {{ max_upload_size }}MB):
-        <dd><input type="file" name="file" multiple="" size="20"/>
-        <dt><input type="checkbox" name="addinfo" /> Check, if you want to personnalize title and/or add comments for each file
-        <dt><input type=submit value=Share><input type="hidden" value="{{ requested_gallery }}" name="requested_gallery" />
-        {% if (requested_gallery!="")  %}
-        <dt>Uploaded file will be added to the current gallery, upload from <a href={{ url_for('show_entries') }}>homepage</a></h1> if you want to create a new gallery
-        {% endif %}
+  <div>
+    <h2>Add files (you can select multiple file, max size {{ max_upload_size }}MB):</h2>
+    <form method="POST" enctype="multipart/form-data" action="{{ url_for('add_entry') }}" id="add-entry">
+      <input type="checkbox" name="addinfo" id="addinfo" /> Check, if you want to personnalize title and/or add comments for each file
+      <input type="file" name="file" id="files" class="multi" size="20" multiple>
+
+      <output id="list"></output>
+      <output style="display:none" id="hidden_list"></output>
+      <input type="submit" value="Upload"><input type="hidden" value="{{ requested_gallery }}" name="requested_gallery" />
     </form>
+  </div>
+
   {% endif %}
   {% if entries_number > 1 %}
   <div class=pageinfo>
@@ -87,7 +90,7 @@
     {% for entry in entries %}
     <ul id="infos_{{ entry.id }}" class=entries>
         <li>
-          <a id="id_{{ entry.id }}"><h2>{{ entry.title }}</h2></a> 
+          <a id="id_{{ entry.id }}"><h2>{{ entry.title }}</h2></a>
           {% if session.logged_in %}
            (<a href="{{ url_for('edit_entry',_external=true,i=entry.id)  }}">edit</a>
            or <a href="{{ url_for('edit_entry',_external=true,g=entry.gallery_id)  }}"> edit gallery</a>)
@@ -117,7 +120,7 @@
         {% endif %}
         <li><p>{{ entry.descr|safe }}</p></li>
         <li class="linkoff"><a href="#infos_{{ entry.id }}" >&#x25B8; Show infos</a><li>
-        <li class="linkon">          
+        <li class="linkon">
           <a href="#id_{{ entry.id }}">&#x25BE; Hide infos</a><br/><br/>
           URL: <a href="{{ url_for('show_entries',_external=true,i=entry.id) }}" class="linklist">{{ url_for('show_entries',_external=true,i=entry.id) }}</a><br/>
           Gallery: <a href="{{ url_for('show_entries',_external=true,g=entry.gallery_id) }}" class="linklist">{{ url_for('show_entries',_external=true,g=entry.gallery_id) }}</a><br/>
@@ -141,6 +144,6 @@
       <li><em>Unbelievable.  No entries here so far</em>
     </ul>
     {% endfor %}
-      {% if previouspage !=0 %}<a href="{{ url_for('show_entries',_external=true,p=previouspage,g=requested_gallery) }}">Previous page</a> {% endif -%} 
+      {% if previouspage !=0 %}<a href="{{ url_for('show_entries',_external=true,p=previouspage,g=requested_gallery) }}">Previous page</a> {% endif -%}
       {%- if nextpage !=0 %} <a href="{{ url_for('show_entries',_external=true,p=nextpage,g=requested_gallery) }}">Next page</a>{% endif %}
 {% endblock %}
