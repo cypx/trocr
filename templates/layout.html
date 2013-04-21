@@ -41,11 +41,6 @@
 {% if config['ENABLE_JSUPLOAD'] %}
 <script>
 
-  var upload_id = 0;
-
-  var filelist = [];
-
-
   function humanSize(size) {
     if(size<(1024*1024)){
         return Math.floor(size/1024) + ' kB';
@@ -122,7 +117,6 @@
   clone.name="file";
   clone.id="files["+upload_id+"]";
 
-
   var files = evt.target.files; // FileList object
 
     var alreadyexist = 0;
@@ -151,8 +145,6 @@
       alert(alreadyexist+" file(s) already added")
     }
 
-
-
   document.getElementById('temp_files').value="";
   document.getElementById('temp_files').name="temp_files";
 
@@ -161,10 +153,13 @@
 
  }
 
-  var inputlist = document.getElementById('files');
-  inputlist.id="temp_files";
-  inputlist.addEventListener('change', handleFileSelect, false);
-
+  if (document.getElementById('files')) {
+    var upload_id = 0;
+    var filelist = [];
+    var inputlist = document.getElementById('files');
+    inputlist.id="temp_files";
+    inputlist.addEventListener('change', handleFileSelect, false);
+  }
 
 
 </script>
