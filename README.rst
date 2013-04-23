@@ -45,6 +45,7 @@ Python Imaging Library (PIL) is also required
 But it's better to use virtualenv, quick example (including trocr install)
 
 .. code-block:: bash
+
 	$ aptitude install python-pip python-virtualenv
 	$ virtualenv --no-site-packages ./path_to_trocr_directory
 	$ cd ./path_to_trocr_directory
