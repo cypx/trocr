@@ -4,30 +4,54 @@ import os
 _basedir = os.path.abspath(os.path.dirname(__file__))
 
 
-#allows the execution of arbitrary code, must never be used on production machines
+# allows the execution of arbitrary code, must never be used on production
 DEBUG = False
 
+# where to store sqlite database
 DATABASE = os.path.join(_basedir, 'trocr.db')
-SECRET_KEY = 'replace by your own key'
-#users lists, place here any number of {'username': 'password'} separated by comma
-#users can only view and edit their own files
-USERS = {'john': 'pass4john', 'demo': 'demo'}
-#admins lists, place here any number of {'username': 'password'} separated by comma
-#admins can view and edit all files
-ADMINS = {'admin': 'password'}
-ENTRY_BY_PAGE = 10
+
+# where to store data folder
 UPLOAD_FOLDER = os.path.join(_basedir, 'data')
+
+# where to store thumbnail folder
+THUMBNAIL_FOLDER = os.path.join(_basedir, 'thumbnail')
+
+# key used for encrypting and decrypting the cookie value
+SECRET_KEY = 'replace by your own key'
+
+# users lists, place here any number of {'username': 'password'} separated by comma
+# users can only view and edit their own files
+USERS = {'john': 'pass4john', 'demo': 'demo'}
+
+# admins lists, place here any number of {'username': 'password'} separated by comma
+# admins can view and edit all files
+ADMINS = {'admin': 'password'}
+
+# number of entry displayed by page
+ENTRY_BY_PAGE = 10
+
 #set the maximum upload file size to 16MB
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024
-THUMBNAIL_FOLDER = os.path.join(_basedir, 'thumbnail')
-#restrict or not uploaded file to allowed extensions
+
+# restrict uploaded file to allowed extensions
 RESTRICT_EXTENSIONS = True
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'zip', 'rar', 'tar', 'tgz', 'gz', 'jpg', 'jpeg', 'gif', 'png', 'bmp', 'tiff', 'svg', 'avi', 'mp4','webm','ogg', 'wav','mp3','ogg','aac','mpeg'])
-ALLOWED_THUMBNAIL_SIZE = set([600,150])
+
+# formats which use specific html output
 IMAGE_FORMATS = set(['jpg','jpeg','gif','png','bmp','tiff','svg'])
 VIDEO_FORMATS = set(['mp4','webm','ogg'])
 AUDIO_FORMATS = set(['wav','mp3','ogg','aac','mpeg'])
-#before enabling mediaelement.js you need to install it, look at the README for more information
+
+# all allowed size wich be automatically generated when url is called
+ALLOWED_THUMBNAIL_SIZE = set([600,150])
+
+# do not resize specific format (animated gif not supported...)
+EXCLUDED_FROM_THUMBNAIL = set(['gif'])
+
+# before enabling mediaelement.js you need to install it, look at the README for more information
 ENABLE_MEDIAELEMENT = False
+
+# enable Javascript enhancement for uploading input file
+ENABLE_JSUPLOAD = True
 
 del os
