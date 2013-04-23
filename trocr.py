@@ -72,8 +72,9 @@ def create_thumb(filename,img_width):
 	dest_dir=os.path.join(app.config['THUMBNAIL_FOLDER'], str(img_width), '/'.join(filename.split('-')[1:4]))
 	dest_path = os.path.join(dest_dir, filename)
 	size = img_width, img_width*100
+	image_format = ((mimetypes.guess_type(src_path))[0]).rsplit('/', 1)[1]
 	if not os.path.exists(dest_dir):os.makedirs(dest_dir)
-	if (mimetypes.guess_type(src_path))[0]=="image/gif":
+	if image_format in (app.config['EXCLUDED_FROM_THUMBNAIL']):
 		try:
 			shutil.copyfile(src_path,dest_path)
 		except IOError:
