@@ -1,8 +1,8 @@
 **********************************
-TROCR  - Share your file 
+TROCR  - Share your file
 **********************************
 
-**trocr** is a file sharing web application based on `Flask framework <http://flask.pocoo.org>`_ 
+**trocr** is a file sharing web application based on `Flask framework <http://flask.pocoo.org>`_
 
 |flattr|_
 
@@ -19,7 +19,7 @@ Example & demo
 #################
 
 * gallery sample: `<http://trocr.bidouille.info/?g=d4641421-13fa-424b-87ae-4fb7c2a44ca7>`__
-* demo (automatically resets every 10mn): `<http://trocr-demo.bidouille.info/>`__ (login/pass = demo/demo) 
+* demo (automatically resets every 10mn): `<http://trocr-demo.bidouille.info/>`__ (login/pass = demo/demo)
 
 Installation
 ***************
@@ -35,11 +35,30 @@ Could be installed on Debian/Ubuntu by this commands
 	$ aptitude install python-pip
 	$ easy_install flask
 
-But it's better to use virtualenv for more information look at `<http://flask.pocoo.org/docs/installation/>`__ 
+Python Imaging Library (PIL) is also required
+
+.. code-block:: bash
+
+	$ easy_install pil
+
+
+But it's better to use virtualenv, quick example (including trocr install)
+
+.. code-block:: bash
+	$ aptitude install python-pip python-virtualenv
+	$ virtualenv --no-site-packages ./path_to_trocr_directory
+	$ cd ./path_to_trocr_directory
+	$ source ./bin/activate
+	$ curl -L https://github.com/cypx/trocr/archive/master.tar.gz | tar zx --strip-components=1
+	$ cp websiteconfig.py.sample websiteconfig.py
+	$ pip install -Ur requirements.txt
+	$ python trocr.py
+
+For more information look at `<http://flask.pocoo.org/docs/installation/>`__
 
 trocr
 ########
-Just download andextract trocr file to a folder 
+Just download and extract trocr file to a folder
 
 .. code-block:: bash
 
