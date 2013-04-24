@@ -2,7 +2,7 @@
 *.pyc
 *.sublime-workspace
 .directory
-.fabfile.py
+fabfile.py
 dist
 *.egg-info
 bin/
