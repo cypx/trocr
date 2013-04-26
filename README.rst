@@ -22,10 +22,10 @@ Example & demo
 * demo (automatically resets every 10mn): `<http://trocr-demo.bidouille.info/>`__ (login/pass = demo/demo)
 
 Installation
-***************
+#################
 
 Flask framework
-#################
+******************
 
 Flask framework is needed for running trocr.
 Could be installed on Debian/Ubuntu by this commands
@@ -58,7 +58,7 @@ But it's better to use virtualenv, quick example (including trocr install)
 For more information look at `<http://flask.pocoo.org/docs/installation/>`__
 
 trocr
-########
+*******
 Just download and extract trocr file to a folder
 
 .. code-block:: bash
@@ -79,6 +79,9 @@ For quick test you could use:
 	$ python trocr.py
 
 Refer to `<http://flask.pocoo.org/docs/deploying/>`__  and your web server documentation about WSGI for production use
+
+MediaElements
+******************
 
 If you want to enable `MediaElements.js<http://mediaelementjs.com/>`_ first you need to download and extract it's build folder content into static/mediaelement directory:
 
