@@ -35,3 +35,6 @@ h2              { font-size: 1.2em; }
                   margin-bottom: 0em; background: #fafafa;
                   border-top: 2px solid #eee; }
 .footer h3	   { margin-bottom: 0em;}
+
+.previous      { float: left;}
+.next          { float: right;}

@@ -7,7 +7,6 @@
     <form method="POST" enctype="multipart/form-data" action="{{ url_for('add_entry') }}" id="add-entry">
       <input type="checkbox" name="addinfo" id="addinfo" /> Check, if you want to personnalize title and/or add comments for each file
       <input type="file" name="file" id="files" class="multi" size="20" multiple>
-
       <output id="list"></output>
       <output style="display:none" id="hidden_list"></output>
       <input type="submit" value="Upload"><input type="hidden" value="{{ requested_gallery }}" name="requested_gallery" />
@@ -16,8 +15,8 @@
 
   {% endif %}
   {% if entries_number > 1 %}
-  <div class=pageinfo>
-    <ul id="infos_page" class=entries>
+  <div class="pageinfo">
+    <ul id="infos_page" class="entries">
         <li><a id="id_page"><h2>Page infos</h2></a></li>
         <li class="linkoff"><a href="#infos_page" >&#x25B8; Show</a></li>
         <li class="linkon"><a href="#id_page">&#x25BE; Hide</a>
@@ -140,10 +139,10 @@
           </li>
       </ul>
     {% else %}
-    <ul class=entries>
+    <ul class="entries">
       <li><em>Unbelievable.  No entries here so far</em>
     </ul>
     {% endfor %}
-      {% if previouspage !=0 %}<a href="{{ url_for('show_entries',_external=true,p=previouspage,g=requested_gallery) }}">Previous page</a> {% endif -%}
-      {%- if nextpage !=0 %} <a href="{{ url_for('show_entries',_external=true,p=nextpage,g=requested_gallery) }}">Next page</a>{% endif %}
+      {% if previouspage !=0 %}<span class="previous"><a href="{{ url_for('show_entries',_external=true,p=previouspage,g=requested_gallery) }}"><- Previous page</a></span>{% endif -%}
+      {%- if nextpage !=0 %}<span class="next"><a href="{{ url_for('show_entries',_external=true,p=nextpage,g=requested_gallery) }}">Next page -></a></span>{% endif %}
 {% endblock %}
