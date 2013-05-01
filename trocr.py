@@ -95,6 +95,11 @@ def before_request():
 def teardown_request(exception):
 	g.db.close()
 
+
+@app.route('/galleries')
+def show_galleries():
+	return None
+
 @app.route('/')
 def show_entries():
 	requested_id = request.args.get('i', '')
