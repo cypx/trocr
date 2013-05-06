@@ -98,13 +98,39 @@ def teardown_request(exception):
 
 @app.route('/galleries')
 def show_galleries():
-	return None
+	if not session.get('logged_in'):
+		abort(401)
+	currentpage = request.args.get('p', '')
+	if currentpage == "": currentpage="1"
+	cur = g.db.execute('SELECT gallery_id FROM entries ORDER BY id desc')
+	all_galleries = [dict(gallery_id=row[0]) for row in cur.fetchall()]
+	selected_galleries = []
+	start_from_gallery = app.config['ENTRY_BY_PAGE']*(int(currentpage)-1)
+	end_to_gallery = (app.config['ENTRY_BY_PAGE']*int(currentpage))-1
+	if int(currentpage)>1: previouspage=int(currentpage)-1
+	else: previouspage=0
+	if end_to_gallery < len(all_galleries): nextpage=int(currentpage)+1
+	else: nextpage=0
+	for gallery in range(start_from_gallery ,end_to_gallery):
+		if gallery < len(all_galleries):
+			selected_galleries.append(all_galleries[gallery])
+
+	page_rendered= render_template('show_entries.html',
+		entries=selected_galleries,
+		previouspage=previouspage,
+		nextpage=nextpage,
+		requested_gallery="",
+		requested_id="",
+		entries_number=0,
+		max_upload_size=str((app.config['MAX_CONTENT_LENGTH'])/ 1024 / 1024))
+	return page_rendered
 
 @app.route('/')
 def show_entries():
 	requested_id = request.args.get('i', '')
 	requested_gallery = request.args.get('g', '')
 	currentpage = request.args.get('p', '')
+	if currentpage == "": currentpage="1"
 	if not session.get('logged_in'):
 		if requested_id != "":
 			cached_page=cache.get('i'+requested_id+'gp')
@@ -117,7 +143,6 @@ def show_entries():
 		logged = False
 	else:
 		logged = True
-	if currentpage == "": currentpage="1"
 	if (requested_id == '') & (requested_gallery == '') & (logged):
 		if session['id'] in app.config['ADMINS']:
 			cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries ORDER BY id desc')
