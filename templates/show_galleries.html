@@ -1,0 +1,52 @@
+
+{% extends "layout.html" %}
+{% block body %}
+    {% for gallery in galleries %}
+    <ul id="infos_{{ gallery.id }}" class=entries>
+        <li>
+          <a id="id_{{ gallery.id }}"><h2>{{ gallery.id }}</h2></a>
+        </li>
+        <li>
+          {% for entry in gallery.entries %}
+            {% if entry.type == "image" %}
+             <a href="{{ url_for('show_entries',_external=true) }}data/{{ entry.filename }}">
+              <img src="{{ url_for('show_entries',_external=true) }}tb/150/{{ entry.filename }}" alt="{{ entry.filename }}" />
+            </a>
+            {% endif %}
+          {% endfor %}
+        </li>
+        <li class="linkoff">
+          <a href="#infos_{{ gallery.id }}" >&#x25B8; Gallery infos</a>
+          <a href="{{ url_for('show_entries',_external=true,g=gallery.id) }}"> view gallery</a>
+          <a href="{{ url_for('edit_entry',_external=true,g=gallery.id)  }}"> edit gallery</a>
+        <li>
+        <li class="linkon">
+          <a href="#id_{{ gallery.id }}">&#x25BE; Hide infos</a>
+          <a href="{{ url_for('show_entries',_external=true,g=gallery.id) }}"> view gallery</a>
+          <a href="{{ url_for('edit_entry',_external=true,g=gallery.id)  }}"> edit gallery</a>
+          <br/><br/>
+          URL: <a href="{{ url_for('show_entries',_external=true,i=gallery.id) }}" class="linklist">{{ url_for('show_entries',_external=true,i=gallery.id) }}</a><br/>
+          Gallery: <a href="{{ url_for('show_entries',_external=true,g=gallery.id) }}" class="linklist">{{ url_for('show_entries',_external=true,g=gallery.id) }}</a><br/>
+          Date: {{ gallery.date }}<br/>
+          Type: {{ gallery.mime }}<br/>
+          Size: {{ gallery.size }}<br/>
+          Uploaded by: {{ gallery.author_id }}<br/>
+          Direct link: <a href="{{ url_for('show_entries',_external=true) }}data/{{ gallery.filename }}" class="linklist">{{ url_for('show_entries',_external=true) }}data/{{ gallery.filename }}</a><br/>
+          {% if gallery.type == "image" %}
+            HTML - Display link or image with link:<br/><input type="text" size="65" value="<a href='{{ url_for('show_entries',_external=true) }}data/{{ gallery.filename }}''><img src='{{ url_for('show_entries',_external=true) }}data/{{ gallery.filename }}' alt='{{ gallery.title }}' /></a>" /><br/>
+            HTML - Display link or 600px thumb with link:<br/><input type="text" size="65" value="<a href='{{ url_for('show_entries',_external=true) }}data/{{ gallery.filename }}''><img src='{{ url_for('show_entries',_external=true) }}tb/600/{{ gallery.filename }}'alt='{{ gallery.title }}' /></a>" /><br/>
+            HTML - Display link or 150px thumb with link:<br/><input type="text" size="65" value="<a href='{{ url_for('show_entries',_external=true) }}data/{{ gallery.filename }}''><img src='{{ url_for('show_entries',_external=true) }}tb/150/{{ gallery.filename }}'alt='{{ gallery.title }}' /></a>" /><br/>
+            BBCode - Display link or image with link:<br/><input type="text" size="65" value="[url={{ url_for('show_entries',_external=true) }}data/{{ gallery.filename }}][img]{{ url_for('show_entries',_external=true) }}data/{{ gallery.filename }}[/img][/url]" /><br/>
+            BBCode - Display link or 600px thumbs with link:<br/><input type="text" size="65" value="[url={{ url_for('show_entries',_external=true) }}data/{{ gallery.filename }}][img]{{ url_for('show_entries',_external=true) }}tb/600/{{ gallery.filename }}[/img][/url]" /><br/>
+            BBCode - Display link or 150px thumbs with link:<br/><input type="text" size="65" value="[url={{ url_for('show_entries',_external=true) }}data/{{ gallery.filename }}][img]{{ url_for('show_entries',_external=true) }}tb/150/{{ gallery.filename }}[/img][/url]" /><br/>
+          {% endif %}
+          </li>
+      </ul>
+    {% else %}
+    <ul class="entries">
+      <li><em>Unbelievable.  No entries here so far</em>
+    </ul>
+    {% endfor %}
+      {% if previouspage !=0 %}<span class="previous"><a href="{{ url_for('show_galleries',_external=true,p=previouspage) }}"><- Previous page</a></span>{% endif -%}
+      {%- if nextpage !=0 %}<span class="next"><a href="{{ url_for('show_galleries',_external=true,p=nextpage) }}">Next page -></a></span>{% endif %}
+{% endblock %}

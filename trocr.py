@@ -102,27 +102,36 @@ def show_galleries():
 		abort(401)
 	currentpage = request.args.get('p', '')
 	if currentpage == "": currentpage="1"
-	cur = g.db.execute('SELECT gallery_id FROM entries ORDER BY id desc')
-	all_galleries = [dict(gallery_id=row[0]) for row in cur.fetchall()]
+	cur = g.db.execute('SELECT distinct gallery_id FROM entries ORDER BY id desc')
+	all_galleries = [dict(id=row[0]) for row in cur.fetchall()]
 	selected_galleries = []
 	start_from_gallery = app.config['ENTRY_BY_PAGE']*(int(currentpage)-1)
-	end_to_gallery = (app.config['ENTRY_BY_PAGE']*int(currentpage))-1
+	end_to_gallery = (app.config['ENTRY_BY_PAGE']*int(currentpage))
 	if int(currentpage)>1: previouspage=int(currentpage)-1
 	else: previouspage=0
 	if end_to_gallery < len(all_galleries): nextpage=int(currentpage)+1
 	else: nextpage=0
 	for gallery in range(start_from_gallery ,end_to_gallery):
 		if gallery < len(all_galleries):
-			selected_galleries.append(all_galleries[gallery])
-
-	page_rendered= render_template('show_entries.html',
-		entries=selected_galleries,
+			cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE gallery_id="{gid}" ORDER BY id asc;'.format(
+			gid=all_galleries[gallery]['id']))
+			gallery_entries = [dict(
+					title=row[0],
+					date=time.strftime("%D %H:%M", time.localtime(int(row[1]))),
+					id=row[3].rsplit('.', 1)[0],
+					descr=row[2], filename=row[3],
+					size=sizeof_fmt(row[4]),
+					mime=row[5],
+					type=row[5].split("/")[0],
+					gallery_id=row[6],
+					author_id=row[7]
+					) for row in cur.fetchall()]
+			selected_galleries.append(dict(id=all_galleries[gallery]['id'],entries=gallery_entries))
+	page_rendered= render_template('show_galleries.html',
+		galleries=selected_galleries,
 		previouspage=previouspage,
 		nextpage=nextpage,
-		requested_gallery="",
-		requested_id="",
-		entries_number=0,
-		max_upload_size=str((app.config['MAX_CONTENT_LENGTH'])/ 1024 / 1024))
+		requested_gallery="")
 	return page_rendered
 
 @app.route('/')
