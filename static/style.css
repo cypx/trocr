@@ -38,3 +38,5 @@ h2              { font-size: 1.2em; }
 
 .previous      { float: left;}
 .next          { float: right;}
+
+.thumbnail     { max-width: 150px; max-height: 150px; }
