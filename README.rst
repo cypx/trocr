@@ -47,11 +47,12 @@ But it's better to use virtualenv, quick example (including trocr install)
 .. code-block:: bash
 
 	$ aptitude install python-pip python-virtualenv
-	$ virtualenv --no-site-packages ./path_to_trocr_directory
 	$ cd ./path_to_trocr_directory
-	$ source ./bin/activate
 	$ curl -L https://github.com/cypx/trocr/archive/master.tar.gz | tar zx --strip-components=1
 	$ cp websiteconfig.py.sample websiteconfig.py
+	$ virtualenv --no-site-packages ./venv
+	$ cd ./venv
+	$ source ./bin/activate
 	$ pip install -Ur requirements.txt
 	$ python trocr.py
 
