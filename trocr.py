@@ -9,7 +9,8 @@ import time
 import os
 import shutil
 import mimetypes
-import Image
+from PIL import Image
+from PIL import ExifTags
 from uuid import uuid4
 from flask import Flask, request, session, g, redirect, url_for, \
 	abort, render_template, flash, send_from_directory
@@ -82,6 +83,14 @@ def create_thumb(filename,img_width):
 	else:
 		try:
 			im = Image.open(src_path)
+			exif=dict((ExifTags.TAGS[k], v) for k, v in im._getexif().items() if k in ExifTags.TAGS)
+			if 'Orientation' in exif:
+				if   exif[orientation] == 3 :
+					image=image.rotate(180, expand=True)
+				elif exif[orientation] == 6 :
+					image=image.rotate(270, expand=True)
+				elif exif[orientation] == 8 :
+					image=image.rotate(90, expand=True)
 			im.thumbnail(size, Image.ANTIALIAS)
 			im.save(dest_path)
 		except IOError:
@@ -381,4 +390,3 @@ def edit_entry():
 
 if __name__ == '__main__':
 	app.run()
-

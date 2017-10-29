@@ -1,6 +1,6 @@
-Flask==0.9
+Flask==0.12.2
 Jinja2==2.6
-PIL==1.1.7
+Pillow==1.7.8
 Werkzeug==0.8.3
-distribute==0.6.10
+distribute==0.7.3
 wsgiref==0.1.2
