@@ -48,7 +48,7 @@ def connect_db():
 	#if database do not exist, create it
 	if not os.path.isfile(app.config['DATABASE']):
 		db=sqlite3.connect(app.config['DATABASE'])
-		with app.open_resource('schema.sql') as f:
+		with app.open_resource('schema.sql', mode='r') as f:
 			db.cursor().executescript(f.read())
 			db.commit()
 		closing(db)
@@ -79,7 +79,7 @@ def create_thumb(filename,img_width):
 		try:
 			shutil.copyfile(src_path,dest_path)
 		except IOError:
-			print "cannot create thumbnail for '%s'" % filename
+			print("cannot create thumbnail for '%s'" % filename)
 	else:
 		try:
 			im = Image.open(src_path)
@@ -102,7 +102,7 @@ def create_thumb(filename,img_width):
 			im.thumbnail(size, Image.ANTIALIAS)
 			im.save(dest_path)
 		except IOError:
-			print "cannot create thumbnail for '%s'" % filename
+			print("cannot create thumbnail for '%s'" % filename)
 
 @app.before_request
 def before_request():
