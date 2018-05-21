@@ -4,8 +4,6 @@ TROCR  - Share your file
 
 **trocr** is a file sharing web application based on `Flask framework <http://flask.pocoo.org>`_
 
-|flattr|_
-
 Features
 ##############
 
@@ -51,8 +49,7 @@ But it's better to use virtualenv, quick example (including trocr install)
 	$ curl -L https://github.com/cypx/trocr/archive/master.tar.gz | tar zx --strip-components=1
 	$ cp websiteconfig.py.sample websiteconfig.py
 	$ virtualenv --no-site-packages ./venv
-	$ cd ./venv
-	$ source ./bin/activate
+	$ source ./venv/bin/activate
 	$ pip install -Ur requirements.txt
 	$ python trocr.py
 
@@ -97,7 +94,3 @@ After that do not forget to activate it into webconfig.py
 .. code-block:: python
 
 	ENABLE_MEDIAELEMENT = True
-
-.. |flattr| image:: http://api.flattr.com/button/flattr-badge-large.png
- :alt: Flattr this git repo
-.. _flattr: https://flattr.com/submit/auto?user_id=cypx&url=https://github.com/cypx/trocr&title=trocr&language=&tags=github&category=software
