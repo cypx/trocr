@@ -82,22 +82,23 @@ def create_thumb(filename,img_width):
 	else:
 		try:
 			im = Image.open(src_path)
-			if im._getexif() is not None:
-				exif=dict((ExifTags.TAGS[k], v) for k, v in im._getexif().items() if k in ExifTags.TAGS)
-				if 'Orientation' in exif:
-					if   exif['Orientation'] == 3 :
-						im=im.rotate(180, expand=True)
-					elif exif['Orientation'] == 6 :
-						im=im.rotate(270, expand=True)
-					elif exif['Orientation'] == 8 :
-						im=im.rotate(90, expand=True)
-				if 'orientation' in exif:
-					if   exif['orientation'] == 3 :
-						im=im.rotate(180, expand=True)
-					elif exif['orientation'] == 6 :
-						im=im.rotate(270, expand=True)
-					elif exif['orientation'] == 8 :
-						im=im.rotate(90, expand=True)
+			if im.format in ["JPEG","MPO"]:
+				if im._getexif() is not None:
+					exif=dict((ExifTags.TAGS[k], v) for k, v in im._getexif().items() if k in ExifTags.TAGS)
+					if 'Orientation' in exif:
+						if   exif['Orientation'] == 3 :
+							im=im.rotate(180, expand=True)
+						elif exif['Orientation'] == 6 :
+							im=im.rotate(270, expand=True)
+						elif exif['Orientation'] == 8 :
+							im=im.rotate(90, expand=True)
+					if 'orientation' in exif:
+						if   exif['orientation'] == 3 :
+							im=im.rotate(180, expand=True)
+						elif exif['orientation'] == 6 :
+							im=im.rotate(270, expand=True)
+						elif exif['orientation'] == 8 :
+							im=im.rotate(90, expand=True)
 			im.thumbnail(size, Image.ANTIALIAS)
 			im.save(dest_path)
 		except IOError:
