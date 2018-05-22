@@ -54,7 +54,6 @@ def connect_db():
 		closing(db)
 	return sqlite3.connect(app.config['DATABASE'])
 
-
 def allowed_file(filename):
 	if not app.config['RESTRICT_EXTENSIONS']:
 		return '.' in filename
@@ -111,7 +110,6 @@ def before_request():
 @app.teardown_request
 def teardown_request(exception):
 	g.db.close()
-
 
 @app.route('/galleries')
 def show_galleries():
@@ -276,7 +274,8 @@ def add_entry():
 	add_success=0
 	add_fail=0
 	for file in uploaded_files:
-		file.filename=file.filename.encode('utf-8')
+		file.filename=file.filename
+		type(file.filename)
 		if file and allowed_file(file.filename):
 			file_title=file.filename.rsplit('.', 1)[0]
 			file_upload_name = secure_filename(file.filename)
