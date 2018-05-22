@@ -319,8 +319,8 @@ def edit_entry():
 		for entry_id in request.form.getlist("entry_id"):
 			g.db.execute('UPDATE entries  SET title="{title}", descr="{descr}" WHERE filename like "{pid}.%";'.format(
 				pid=entry_id,
-				title=request.form['title'+"_"+entry_id].encode('utf-8'),
-				descr=request.form['descr'+"_"+entry_id].encode('utf-8')))
+				title=request.form['title'+"_"+entry_id],
+				descr=request.form['descr'+"_"+entry_id]))
 			g.db.commit()
 			update_success=update_success+1
 		for del_id in request.form.getlist("del_id"):
