@@ -1,0 +1,13 @@
+version: '3.4'
+
+services:
+  app:
+    build: ./
+    image: trocr
+    volumes:
+      - "$PWD/data:/src/data"
+      - "$PWD/thumbnail:/src/thumbnail"
+      - "$PWD/trocr.db:/src/trocr.db"
+      - "$PWD/websiteconfig.py:/src/websiteconfig.py:ro"
+    ports:
+      - 8000:8000
