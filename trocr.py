@@ -353,7 +353,7 @@ def edit_entry():
 			cache.delete('ig'+gallery_id+'p')
 			gallery_page=1
 			cached_page=cache.delete('ig'+str(gallery_id)+'p'+str(gallery_page))
-			while cached_page is not None:
+			while cached_page:
 				gallery_page=gallery_page+1
 				cached_page=cache.delete('ig'+str(gallery_id)+'p'+str(gallery_page))
 		return redirect(url_for('show_entries'))
