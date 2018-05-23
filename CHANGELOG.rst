@@ -6,6 +6,12 @@ trocr
 Changelog
 #############
 
+0.0.3 (20180524)
+*******************
+
+* upgrade components
+* migrate to Python 3
+
 0.0.2 (20130426)
 *******************
 
