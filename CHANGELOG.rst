@@ -6,6 +6,13 @@ trocr
 Changelog
 #############
 
+0.1.0 (20180524)
+*******************
+
+* upgrade components
+* migrate to Python 3
+* flag beta (after 5 years of personal usage it seems stable enough ^.^ )
+
 0.0.3 (20180524)
 *******************
 
