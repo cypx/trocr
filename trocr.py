@@ -48,12 +48,11 @@ def connect_db():
 	#if database do not exist, create it
 	if not os.path.isfile(app.config['DATABASE']):
 		db=sqlite3.connect(app.config['DATABASE'])
-		with app.open_resource('schema.sql') as f:
+		with app.open_resource('schema.sql', mode='r') as f:
 			db.cursor().executescript(f.read())
 			db.commit()
 		closing(db)
 	return sqlite3.connect(app.config['DATABASE'])
-
 
 def allowed_file(filename):
 	if not app.config['RESTRICT_EXTENSIONS']:
@@ -79,30 +78,31 @@ def create_thumb(filename,img_width):
 		try:
 			shutil.copyfile(src_path,dest_path)
 		except IOError:
-			print "cannot create thumbnail for '%s'" % filename
+			print("cannot create thumbnail for '%s'" % filename)
 	else:
 		try:
 			im = Image.open(src_path)
-			if im._getexif() is not None:
-				exif=dict((ExifTags.TAGS[k], v) for k, v in im._getexif().items() if k in ExifTags.TAGS)
-				if 'Orientation' in exif:
-					if   exif['Orientation'] == 3 :
-						im=im.rotate(180, expand=True)
-					elif exif['Orientation'] == 6 :
-						im=im.rotate(270, expand=True)
-					elif exif['Orientation'] == 8 :
-						im=im.rotate(90, expand=True)
-				if 'orientation' in exif:
-					if   exif['orientation'] == 3 :
-						im=im.rotate(180, expand=True)
-					elif exif['orientation'] == 6 :
-						im=im.rotate(270, expand=True)
-					elif exif['orientation'] == 8 :
-						im=im.rotate(90, expand=True)
+			if im.format in ["JPEG","MPO"]:
+				if im._getexif() is not None:
+					exif=dict((ExifTags.TAGS[k], v) for k, v in im._getexif().items() if k in ExifTags.TAGS)
+					if 'Orientation' in exif:
+						if   exif['Orientation'] == 3 :
+							im=im.rotate(180, expand=True)
+						elif exif['Orientation'] == 6 :
+							im=im.rotate(270, expand=True)
+						elif exif['Orientation'] == 8 :
+							im=im.rotate(90, expand=True)
+					if 'orientation' in exif:
+						if   exif['orientation'] == 3 :
+							im=im.rotate(180, expand=True)
+						elif exif['orientation'] == 6 :
+							im=im.rotate(270, expand=True)
+						elif exif['orientation'] == 8 :
+							im=im.rotate(90, expand=True)
 			im.thumbnail(size, Image.ANTIALIAS)
 			im.save(dest_path)
 		except IOError:
-			print "cannot create thumbnail for '%s'" % filename
+			print("cannot create thumbnail for '%s'" % filename)
 
 @app.before_request
 def before_request():
@@ -111,7 +111,6 @@ def before_request():
 @app.teardown_request
 def teardown_request(exception):
 	g.db.close()
-
 
 @app.route('/galleries')
 def show_galleries():
@@ -276,7 +275,8 @@ def add_entry():
 	add_success=0
 	add_fail=0
 	for file in uploaded_files:
-		file.filename=file.filename.encode('utf-8')
+		file.filename=file.filename
+		type(file.filename)
 		if file and allowed_file(file.filename):
 			file_title=file.filename.rsplit('.', 1)[0]
 			file_upload_name = secure_filename(file.filename)
@@ -319,8 +319,8 @@ def edit_entry():
 		for entry_id in request.form.getlist("entry_id"):
 			g.db.execute('UPDATE entries  SET title="{title}", descr="{descr}" WHERE filename like "{pid}.%";'.format(
 				pid=entry_id,
-				title=request.form['title'+"_"+entry_id].encode('utf-8'),
-				descr=request.form['descr'+"_"+entry_id].encode('utf-8')))
+				title=request.form['title'+"_"+entry_id],
+				descr=request.form['descr'+"_"+entry_id]))
 			g.db.commit()
 			update_success=update_success+1
 		for del_id in request.form.getlist("del_id"):
@@ -353,7 +353,7 @@ def edit_entry():
 			cache.delete('ig'+gallery_id+'p')
 			gallery_page=1
 			cached_page=cache.delete('ig'+str(gallery_id)+'p'+str(gallery_page))
-			while cached_page is not None:
+			while cached_page:
 				gallery_page=gallery_page+1
 				cached_page=cache.delete('ig'+str(gallery_id)+'p'+str(gallery_page))
 		return redirect(url_for('show_entries'))
