@@ -6,6 +6,11 @@ trocr
 Changelog
 #############
 
+0.1.1 (20180524)
+*******************
+
+* fix url scheme when behind reverse proxy with TLS
+
 0.1.0 (20180524)
 *******************
 

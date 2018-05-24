@@ -16,9 +16,11 @@ from flask import Flask, request, session, g, redirect, url_for, \
 	abort, render_template, flash, send_from_directory
 from werkzeug import secure_filename
 from werkzeug.contrib.cache import SimpleCache
+from werkzeug.contrib.fixers import ProxyFix
 
 # create application
 app = Flask(__name__)
+app.wsgi_app = ProxyFix(app.wsgi_app)
 app.config.from_object('websiteconfig')
 # create cache
 cache = SimpleCache()
