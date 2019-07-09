@@ -8,7 +8,7 @@ _basedir = os.path.abspath(os.path.dirname(__file__))
 DEBUG = False
 
 # where to store sqlite database
-DATABASE = os.path.join(_basedir, 'trocr.db')
+DATABASE = os.path.join(_basedir, 'data/trocr.db')
 
 # where to store data folder
 UPLOAD_FOLDER = os.path.join(_basedir, 'data')

@@ -55,6 +55,16 @@ But it's better to use virtualenv, quick example (including trocr install)
 
 For more information look at `<http://flask.pocoo.org/docs/installation/>`__
 
+You could also use Docker
+
+.. code-block:: bash
+
+	$ aptitude install python-pip python-virtualenv
+	$ cd ./path_to_trocr_directory
+	$ curl -L https://github.com/cypx/trocr/archive/master.tar.gz | tar zx --strip-components=1
+	$ cp websiteconfig.py.sample websiteconfig.py
+	$ docker-compose up -d
+
 trocr
 *******
 Just download and extract trocr file to a folder
