@@ -1,6 +1,7 @@
 *~
 *.pyc
 *.sublime-workspace
+.vscode
 .directory
 *.egg-info
 /dist/
