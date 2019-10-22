@@ -1,6 +1,6 @@
 Flask==1.1.1
 Jinja2==2.10.3
-Pillow==6.2.0
+Pillow==6.2.1
 Werkzeug>=0.14
 itsdangerous>=0.24
 click>=6.7
