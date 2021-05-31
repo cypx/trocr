@@ -14,9 +14,9 @@ from PIL import ExifTags
 from uuid import uuid4
 from flask import Flask, request, session, g, redirect, url_for, \
 	abort, render_template, flash, send_from_directory
-from werkzeug import secure_filename
-from werkzeug.contrib.cache import SimpleCache
-from werkzeug.contrib.fixers import ProxyFix
+from werkzeug.utils import secure_filename
+from cachelib import SimpleCache
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 # create application
 app = Flask(__name__)
