@@ -6,6 +6,11 @@ trocr
 Changelog
 #############
 
+0.1.2 (20200615)
+*******************
+
+* dependancies update (Flask 2, Jinga3, Pillow 8...)
+
 0.1.1 (20180524)
 *******************
 
