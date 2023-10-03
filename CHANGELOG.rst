@@ -6,6 +6,11 @@ trocr
 Changelog
 #############
 
+0.1.3 (20231003)
+*******************
+
+* dependancies update (Flask 3, Pillow 10, Werkzeug 3...)
+
 0.1.2 (20200615)
 *******************
 
