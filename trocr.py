@@ -101,7 +101,7 @@ def create_thumb(filename,img_width):
 							im=im.rotate(270, expand=True)
 						elif exif['orientation'] == 8 :
 							im=im.rotate(90, expand=True)
-			im.thumbnail(size, Image.ANTIALIAS)
+			im.thumbnail(size, Image.LANCZOS)
 			im.save(dest_path)
 		except IOError:
 			print("cannot create thumbnail for '%s'" % filename)
