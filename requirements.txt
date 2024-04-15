@@ -4,4 +4,4 @@ Pillow==10.3.0
 Werkzeug==3.0.2
 itsdangerous>=0.24
 click>=6.7
-cachelib==0.12.0
+cachelib==0.13.0
