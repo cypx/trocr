@@ -75,6 +75,12 @@ def create_thumb(filename,img_width):
 	dest_path = os.path.normpath(os.path.join(dest_dir, filename))
 	size = img_width, img_width*100
 	image_format = ((mimetypes.guess_type(src_path))[0]).rsplit('/', 1)[1]
+	if not src_path.startswith(app.config['UPLOAD_FOLDER']):
+		raise Exception("not allowed")
+	if not dest_dir.startswith(app.config['THUMBNAIL_FOLDER']):
+		raise Exception("not allowed")
+	if not dest_path.startswith(app.config['THUMBNAIL_FOLDER']):
+		raise Exception("not allowed")
 	if not os.path.exists(dest_dir):os.makedirs(dest_dir)
 	if image_format in (app.config['EXCLUDED_FROM_THUMBNAIL']):
 		try:
@@ -246,7 +252,10 @@ def logout():
 
 @app.route('/data/<filename>')
 def uploaded_file(filename):
-	return send_from_directory(os.path.normpath(os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(filename.split('-')[1:4]))), filename)
+	directory = os.path.normpath(os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(filename.split('-')[1:4])))
+	if not directory.startswith(app.config['UPLOAD_FOLDER']):
+		raise Exception("not allowed")
+	return send_from_directory(directory, filename)
 
 @app.route('/tb/<int:size>/<filename>')
 def show_thumbnail(filename,size):
@@ -254,6 +263,10 @@ def show_thumbnail(filename,size):
 		abort(401)
 	file_dir = os.path.normpath(os.path.join(app.config['THUMBNAIL_FOLDER'], str(size), '/'.join(filename.split('-')[1:4])))
 	file_path = os.path.normpath(os.path.join(file_dir, filename))
+	if not file_dir.startswith(app.config['THUMBNAIL_FOLDER']):
+		raise Exception("not allowed")
+	if not file_path.startswith(app.config['THUMBNAIL_FOLDER']):
+		raise Exception("not allowed")
 	if not os.path.exists(file_path):
 		create_thumb(filename,size)
 	return send_from_directory(file_dir,filename)
