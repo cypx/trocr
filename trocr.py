@@ -131,8 +131,7 @@ def show_galleries():
 	else: nextpage=0
 	for gallery in range(start_from_gallery ,end_to_gallery):
 		if gallery < len(all_galleries):
-			cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE gallery_id="{gid}" ORDER BY id asc;'.format(
-			gid=all_galleries[gallery]['id']))
+			cur = g.db.execute("SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE gallery_id=? ORDER BY id asc;", (all_galleries[gallery]['id'],))
 			gallery_entries = [dict(
 					title=row[0],
 					date=time.strftime("%D %H:%M", time.localtime(int(row[1]))),
@@ -172,16 +171,13 @@ def show_entries():
 		logged = True
 	if (requested_id == '') & (requested_gallery == '') & (logged):
 		if session['id'] in app.config['ADMINS']:
-			cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries ORDER BY id desc')
+			cur = g.db.execute("SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries ORDER BY id desc")
 		else:
-			cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE author_id="{aid}" ORDER BY id desc'.format(
-			aid=session['id']))
+			cur = g.db.execute("SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE author_id=? ORDER BY id desc", (session["id"],))
 	elif (requested_id != ''):
-		cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE filename like "{pid}.%" ORDER BY id desc;'.format(
-			pid=requested_id))
+		cur = g.db.execute("SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE filename LIKE ? ORDER BY id desc;", (requested_id+".%",))
 	elif (requested_gallery != ''):
-		cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE gallery_id="{gid}" ORDER BY id asc;'.format(
-			gid=requested_gallery))
+		cur = g.db.execute("SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE gallery_id=? ORDER BY id asc;", (requested_gallery,))
 	else:
 		cur = g.db.cursor()
 	all_entries = [dict(
@@ -291,15 +287,15 @@ def add_entry():
 			file.save(file_path)
 			fileinfo = os.stat(file_path)
 			dictionnary=string.ascii_letters+string.digits # alphanumeric, upper and lowercase
-			g.db.execute('INSERT INTO entries (title, author_id, gallery_id, date, descr, filename, size, mime) VALUES ("{title}", "{aid}", "{gid}", "{date}", "{descr}", "{filename}", "{size}", "{mime}");'.format(
-				title=file_title,
-				aid=session.get('id'),
-				gid=gallery_uuid,
-				date=time.time(),
-				descr="",
-				filename=file_name,
-				size=fileinfo.st_size,
-				mime=(mimetypes.guess_type(file_path))[0]))
+			g.db.execute("INSERT INTO entries (title, author_id, gallery_id, date, descr, filename, size, mime) VALUES (?, ?, ?, ?, ?, ?, ?, ?);",(
+				file_title,
+				session.get('id'),
+				gallery_uuid,
+				time.time(),
+				"",
+				file_name,
+				fileinfo.st_size,
+				(mimetypes.guess_type(file_path))[0],))
 			g.db.commit()
 			add_success=add_success+1
 		else:
@@ -319,14 +315,14 @@ def edit_entry():
 		update_success=0
 		del_success=0
 		for entry_id in request.form.getlist("entry_id"):
-			g.db.execute('UPDATE entries  SET title="{title}", descr="{descr}" WHERE filename like "{pid}.%";'.format(
-				pid=entry_id,
-				title=request.form['title'+"_"+entry_id],
-				descr=request.form['descr'+"_"+entry_id]))
+			g.db.execute("UPDATE entries  SET title=?, descr=? WHERE filename LIKE ?;",(
+				request.form['title'+"_"+entry_id],
+				request.form['descr'+"_"+entry_id],
+				entry_id+".%",))
 			g.db.commit()
 			update_success=update_success+1
 		for del_id in request.form.getlist("del_id"):
-			cur = g.db.execute('SELECT filename FROM entries WHERE filename like "{pid}.%"'.format(pid=del_id))
+			cur = g.db.execute("SELECT filename FROM entries WHERE filename LIKE ?", (del_id+".%",))
 			filename = cur.fetchone()[0]
 			if os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(filename.split('-')[1:4]), filename)):
 				os.remove(os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(filename.split('-')[1:4]), filename))
@@ -343,7 +339,7 @@ def edit_entry():
 						rm_dir=os.path.join(app.config['THUMBNAIL_FOLDER'], str(size), '/'.join(filename.split('-')[1:dir_level]))
 						if os.listdir(rm_dir) == []:
 							os.rmdir(rm_dir)
-			g.db.execute('DELETE FROM entries  WHERE filename like "{pid}.%";'.format(pid=del_id))
+			g.db.execute("DELETE FROM entries  WHERE filename LIKE ?", (del_id+".%",))
 			g.db.commit()
 			del_success=del_success+1
 			update_success=update_success-1
@@ -366,24 +362,21 @@ def edit_entry():
 			if session['id'] in app.config['ADMINS']:
 				cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries ORDER BY id desc')
 			else:
-				cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE author_id="{aid}" ORDER BY id desc'.format(
-				aid=session['id']))
+				cur = g.db.execute("SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE author_id=? ORDER BY id desc", (session['id'],))
 		elif (requested_id != ''):
 			if session['id'] in app.config['ADMINS']:
-				cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE filename LIKE "{pid}.%" ORDER BY id desc;'.format(
-					pid=requested_id))
+				cur = g.db.execute("SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE filename LIKE ? ORDER BY id desc;", (requested_id+".%",))
 			else:
-				cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE filename LIKE "{pid}.%" AND author_id="{aid}" ORDER BY id desc;'.format(
-					aid=session['id'],
-					pid=requested_id))
+				cur = g.db.execute("SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE filename LIKE ? AND author_id=? ORDER BY id desc;", (
+					requested_id+".%",
+					session['id'],))
 		elif (requested_gallery != ''):
 			if session['id'] in app.config['ADMINS']:
-				cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE gallery_id="{gid}" ORDER BY id asc;'.format(
-				gid=requested_gallery))
+				cur = g.db.execute("SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE gallery_id=? ORDER BY id asc;", (requested_gallery,))
 			else:
-				cur = g.db.execute('SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE gallery_id="{gid}" AND author_id="{aid}" ORDER BY id asc;'.format(
-				aid=session['id'],
-				gid=requested_gallery))
+				cur = g.db.execute("SELECT title, date, descr, filename, size, mime, gallery_id, author_id FROM entries WHERE gallery_id=? AND author_id=? ORDER BY id asc;", (
+				requested_gallery,
+				session['id'],))
 		entries = [dict(
 			title=row[0],
 			date=time.strftime("%D %H:%M",
