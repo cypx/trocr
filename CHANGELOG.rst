@@ -6,15 +6,21 @@ trocr
 Changelog
 #############
 
+0.1.4 (20240417)
+*******************
+
+* dependencies update (Flask, Pillow, Werkzeug...)
+* enforce sql queries & path control
+
 0.1.3 (20231003)
 *******************
 
-* dependancies update (Flask 3, Pillow 10, Werkzeug 3...)
+* dependencies update (Flask 3, Pillow 10, Werkzeug 3...)
 
 0.1.2 (20200615)
 *******************
 
-* dependancies update (Flask 2, Jinga3, Pillow 8...)
+* dependencies update (Flask 2, Jinga3, Pillow 8...)
 
 0.1.1 (20180524)
 *******************
