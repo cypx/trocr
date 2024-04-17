@@ -70,9 +70,9 @@ def sizeof_fmt(num):
 	return "%3.1f%s" % (num, 'TB')
 
 def create_thumb(filename,img_width):
-	src_path=os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(filename.split('-')[1:4]) ,filename)
-	dest_dir=os.path.join(app.config['THUMBNAIL_FOLDER'], str(img_width), '/'.join(filename.split('-')[1:4]))
-	dest_path = os.path.join(dest_dir, filename)
+	src_path = os.path.normpath(os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(filename.split('-')[1:4]) ,filename))
+	dest_dir = os.path.normpath(os.path.join(app.config['THUMBNAIL_FOLDER'], str(img_width), '/'.join(filename.split('-')[1:4])))
+	dest_path = os.path.normpath(os.path.join(dest_dir, filename))
 	size = img_width, img_width*100
 	image_format = ((mimetypes.guess_type(src_path))[0]).rsplit('/', 1)[1]
 	if not os.path.exists(dest_dir):os.makedirs(dest_dir)
@@ -246,14 +246,14 @@ def logout():
 
 @app.route('/data/<filename>')
 def uploaded_file(filename):
-	return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(filename.split('-')[1:4])), filename)
+	return send_from_directory(os.path.normpath(os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(filename.split('-')[1:4]))), filename)
 
 @app.route('/tb/<int:size>/<filename>')
 def show_thumbnail(filename,size):
 	if size not in app.config['ALLOWED_THUMBNAIL_SIZE']:
 		abort(401)
-	file_dir=os.path.join(app.config['THUMBNAIL_FOLDER'], str(size), '/'.join(filename.split('-')[1:4]))
-	file_path=os.path.join(file_dir, filename)
+	file_dir = os.path.normpath(os.path.join(app.config['THUMBNAIL_FOLDER'], str(size), '/'.join(filename.split('-')[1:4])))
+	file_path = os.path.normpath(os.path.join(file_dir, filename))
 	if not os.path.exists(file_path):
 		create_thumb(filename,size)
 	return send_from_directory(file_dir,filename)
@@ -280,8 +280,8 @@ def add_entry():
 			file_upload_name = secure_filename(file.filename)
 			file_uuid=str(uuid4())
 			file_name = file_uuid  + '.' + file.filename.rsplit('.', 1)[1]
-			file_dir = os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(file_name.split('-')[1:4]))
-			file_path = os.path.join(file_dir, file_name)
+			file_dir = os.path.normpath(os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(file_name.split('-')[1:4])))
+			file_path = os.path.normpath(os.path.join(file_dir, file_name))
 			if not os.path.exists(file_dir):
 				os.makedirs(file_dir)
 			file.save(file_path)
@@ -324,19 +324,19 @@ def edit_entry():
 		for del_id in request.form.getlist("del_id"):
 			cur = g.db.execute("SELECT filename FROM entries WHERE filename LIKE ?", (del_id+".%",))
 			filename = cur.fetchone()[0]
-			if os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(filename.split('-')[1:4]), filename)):
-				os.remove(os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(filename.split('-')[1:4]), filename))
+			if os.path.exists(os.path.normpath(os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(filename.split('-')[1:4]), filename))):
+				os.remove(os.path.normpath(os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(filename.split('-')[1:4]), filename)))
 			for dir_level in range(4,1,-1):
-				if os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(filename.split('-')[1:dir_level]))):
-					rm_dir=os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(filename.split('-')[1:dir_level]))
+				if os.path.exists(os.path.normpath(os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(filename.split('-')[1:dir_level])))):
+					rm_dir=os.path.normpath(os.path.join(app.config['UPLOAD_FOLDER'], '/'.join(filename.split('-')[1:dir_level])))
 					if os.listdir(rm_dir) == []:
 						os.rmdir(rm_dir)
 			for size in app.config['ALLOWED_THUMBNAIL_SIZE']:
-				if os.path.exists(os.path.join(app.config['THUMBNAIL_FOLDER'], str(size), '/'.join(filename.split('-')[1:4]), filename)):
-					os.remove(os.path.join(app.config['THUMBNAIL_FOLDER'], str(size), '/'.join(filename.split('-')[1:4]), filename))
+				if os.path.exists(os.path.normpath(os.path.join(app.config['THUMBNAIL_FOLDER'], str(size), '/'.join(filename.split('-')[1:4]), filename))):
+					os.remove(os.path.normpath(os.path.join(app.config['THUMBNAIL_FOLDER'], str(size), '/'.join(filename.split('-')[1:4]), filename)))
 				for dir_level in range(4,1,-1):
-					if os.path.exists(os.path.join(app.config['THUMBNAIL_FOLDER'], str(size), '/'.join(filename.split('-')[1:dir_level]))):
-						rm_dir=os.path.join(app.config['THUMBNAIL_FOLDER'], str(size), '/'.join(filename.split('-')[1:dir_level]))
+					if os.path.exists(os.path.normpath(os.path.join(app.config['THUMBNAIL_FOLDER'], str(size), '/'.join(filename.split('-')[1:dir_level])))):
+						rm_dir=os.path.normpath(os.path.join(app.config['THUMBNAIL_FOLDER'], str(size), '/'.join(filename.split('-')[1:dir_level])))
 						if os.listdir(rm_dir) == []:
 							os.rmdir(rm_dir)
 			g.db.execute("DELETE FROM entries  WHERE filename LIKE ?", (del_id+".%",))
